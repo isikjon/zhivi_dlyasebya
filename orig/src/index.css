@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-quantum-emerald: #0A2E2E; /* Deep Emerald - Main BG */
+  --color-quantum-rose: #E6B450;    /* Amber/Gold - Secondary Accent */
+  --color-quantum-amber: #E6B450;   /* Amber/Gold - Primary Accent */
+  --color-quantum-ivory: #F5F0EE;   /* Ivory - Main Text */
+  --color-quantum-graphite: #061A1A; /* Darker Emerald - Surface/Cards */
+  --color-quantum-berry: #041212;    /* Deepest Emerald - Tertiary Accent */
+  
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  background-color: var(--color-quantum-emerald);
+  color: var(--color-quantum-ivory);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* Abstract Waves Background */
+.bg-waves {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  opacity: 0.2;
+  background: 
+    radial-gradient(circle at 15% 50%, rgba(245, 240, 238, 0.15), transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(230, 184, 185, 0.1), transparent 50%);
+  filter: blur(100px);
+}
+
+/* Floating Particles */
+.particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(var(--color-quantum-rose) 1px, transparent 1px);
+  background-size: 100px 100px;
+  opacity: 0.08;
+}
+
+/* Hide scrollbar utility */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Hide scrollbar for clean look */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-quantum-emerald);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-quantum-rose);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-quantum-amber);
+}
