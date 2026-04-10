@@ -13,4 +13,9 @@ class Lesson extends Model
     {
         return $this->belongsTo(Module::class);
     }
+
+    public function assets(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(LessonAsset::class);
+    }
 }

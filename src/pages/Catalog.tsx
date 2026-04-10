@@ -13,9 +13,7 @@ export default function Catalog() {
   const categories = [
     { id: 'all', title: 'Все программы', icon: LayoutGrid },
     { id: 'free', title: 'Бесплатные', icon: Sparkles },
-    { id: 'live_yourself', title: 'Живи Себя', icon: Heart },
-    { id: 'archetypes', title: 'Архетипы', icon: Star },
-    { id: 'retreats', title: 'Выездные программы', icon: MapPin }
+    { id: 'live_yourself', title: 'Платные курсы', icon: Heart },
   ];
 
   const filteredCourses = activeCategory === 'all' 
@@ -103,13 +101,10 @@ export default function Catalog() {
                 >
                   <div className="aspect-[16/10] overflow-hidden relative">
                     <div className="absolute inset-0 bg-quantum-emerald/40 mix-blend-multiply z-10 group-hover:opacity-0 transition-opacity duration-500 pointer-events-none"></div>
-                    <EditableImage 
-                      imageId={`catalog_${prog.id}`}
-                      defaultSrc={prog.image} 
+                    <img 
+                      src={prog.image} 
                       alt={prog.title} 
-                      containerClassName="w-full h-full"
-                      imageClassName="transform group-hover:scale-105 transition-transform duration-700"
-                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                     />
                     <div className="absolute top-6 right-6 z-20 bg-quantum-graphite/90 backdrop-blur-md px-4 py-2 rounded-full text-sm font-medium border border-quantum-rose/10 flex items-center gap-2 pointer-events-none">
                       <Clock size={14} className="text-quantum-rose" />
@@ -130,26 +125,26 @@ export default function Catalog() {
                         <div className="font-display text-3xl font-bold text-quantum-ivory">
                           {prog.price}
                         </div>
-                        <Link to={`/program/${prog.id}`} className="text-quantum-rose hover:translate-x-1 transition-transform">
+                        <a href={`/cabinet/course/${prog.id}`} className="text-quantum-rose hover:translate-x-1 transition-transform">
                           <ChevronRight size={24} />
-                        </Link>
+                        </a>
                       </div>
                       
                       <div className="flex items-center gap-3">
-                        <Link to={`/program/${prog.id}`} className="flex-1">
+                        <a href={`/cabinet/course/${prog.id}`} className="flex-1">
                           <Button 
                             variant="outline" 
                             className="w-full py-4 text-xs font-bold uppercase tracking-widest"
                           >
                             Подробнее
                           </Button>
-                        </Link>
+                        </a>
                         <Button 
                           variant={prog.category === 'free' ? 'secondary' : 'primary'}
                           className="flex-1 py-4 text-xs font-bold uppercase tracking-widest"
                           onClick={() => {
                             if (prog.category === 'free') {
-                              window.location.href = `/program/${prog.id}`;
+                              window.location.href = `/cabinet/course/${prog.id}`;
                             } else {
                               window.open('https://t.me/victoria_neustroeva', '_blank');
                             }

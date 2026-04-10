@@ -16,10 +16,11 @@ createInertiaApp({
     },
     setup({ el, App, props }) {
         const root = createRoot(el);
+        const initialCourses = props.initialPage.props.courses || [];
 
         root.render(
             <AuthProvider>
-                <CourseProvider>
+                <CourseProvider initialCourses={initialCourses}>
                     <App {...props} />
                 </CourseProvider>
             </AuthProvider>

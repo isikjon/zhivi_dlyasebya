@@ -13,6 +13,48 @@
   --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
 }
 
+.rich-text-content a, .rich-text-link {
+  color: var(--color-quantum-amber) !important;
+  text-decoration: underline !important;
+  transition: opacity 0.2s;
+}
+
+.rich-text-content a:hover, .rich-text-link:hover {
+  opacity: 0.8;
+}
+
+.rich-text-content ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.rich-text-content ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.rich-text-content li {
+  margin-bottom: 0.25rem;
+}
+
+/* Custom scrollbar for media lists */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(230, 180, 80, 0.3);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(230, 180, 80, 0.5);
+}
+
 body {
   background-color: #0A2E2E;
   color: var(--color-quantum-ivory);

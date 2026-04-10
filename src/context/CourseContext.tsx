@@ -149,10 +149,26 @@ const defaultPrograms: Course[] = [
 
 const CourseContext = createContext<CourseContextType | undefined>(undefined);
 
-export function CourseProvider({ children }: { children: React.ReactNode }) {
+export function CourseProvider({ children, initialCourses = [] }: { children: React.ReactNode, initialCourses?: any[] }) {
   const [courses, setCourses] = useState<Course[]>([]);
 
   useEffect(() => {
+    if (initialCourses && initialCourses.length > 0) {
+      const mapped = initialCourses.map(c => ({
+        id: c.id.toString(),
+        title: c.title,
+        subtitle: c.description ? c.description.substring(0, 50) + '...' : 'Программа обучения',
+        category: c.price == 0 ? 'free' : 'live_yourself',
+        price: c.price == 0 ? 'Бесплатно' : `${c.price} ₽`,
+        duration: 'Доступ навсегда',
+        image: c.image_path ? `/storage/${c.image_path}` : "https://picsum.photos/seed/prog1/600/400",
+        color: 'rose',
+        lessons: []
+      }));
+      setCourses(mapped);
+      return;
+    }
+
     const savedCourses = localStorage.getItem('quantum_courses_v3');
     if (savedCourses) {
       const parsed = JSON.parse(savedCourses);

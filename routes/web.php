@@ -29,8 +29,10 @@ Route::get('/catalog', function () {
     // Личный кабинет ученика
     Route::middleware(['auth', 'verified'])->prefix('cabinet')->name('cabinet.')->group(function () {
         Route::get('/dashboard', [CourseController::class, 'index'])->name('index');
-        Route::get('/course/{course}', [CourseController::class, 'show'])->name('course.show');
-        Route::get('/lesson/{lesson}', [CourseController::class, 'showLesson'])->name('lesson.show');
+    Route::get('/course/{course}', [CourseController::class, 'show'])->name('course.show');
+    Route::post('/course/{course}/enroll', [CourseController::class, 'enroll'])->name('course.enroll');
+    Route::get('/lesson/{lesson}', [CourseController::class, 'showLesson'])->name('lesson.show');
+    Route::post('/lesson/{lesson}/complete', [CourseController::class, 'completeLesson'])->name('lesson.complete');
         
         // Профиль внутри кабинета
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -47,7 +49,7 @@ Route::get('/catalog', function () {
     });
 
 // Админка
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Admin/Dashboard'); // Создадим позже или переиспользуем
     })->name('dashboard');
@@ -56,9 +58,15 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::get('/courses/create', [AdminCourseController::class, 'create'])->name('courses.create');
     Route::post('/courses', [AdminCourseController::class, 'store'])->name('courses.store');
     Route::get('/courses/{course}', [AdminCourseController::class, 'show'])->name('courses.show');
+    Route::get('/courses/{course}/edit', [AdminCourseController::class, 'edit'])->name('courses.edit');
+    Route::post('/courses/{course}', [AdminCourseController::class, 'update'])->name('courses.update');
+    Route::put('/courses/{course}', [AdminCourseController::class, 'update']);
+    Route::patch('/courses/{course}', [AdminCourseController::class, 'update']);
+    Route::delete('/courses/{course}', [AdminCourseController::class, 'destroy'])->name('courses.destroy');
     
     // Модули
     Route::post('/courses/{course}/modules', [\App\Http\Controllers\Admin\ModuleController::class, 'store'])->name('modules.store');
+    Route::put('/modules/{module}', [\App\Http\Controllers\Admin\ModuleController::class, 'update'])->name('modules.update');
     Route::delete('/modules/{module}', [\App\Http\Controllers\Admin\ModuleController::class, 'destroy'])->name('modules.destroy');
     
     // Пользователи
@@ -71,7 +79,22 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::post('/content/update', [\App\Http\Controllers\Admin\ContentController::class, 'update'])->name('content.update');
     Route::post('/content/update-by-key', [\App\Http\Controllers\Admin\ContentController::class, 'updateByKey'])->name('content.update_by_key');
     
+    // SEO
+    Route::get('/seo', [\App\Http\Controllers\Admin\SeoController::class, 'index'])->name('seo.index');
+    Route::post('/seo/page/{page}', [\App\Http\Controllers\Admin\SeoController::class, 'updatePage'])->name('seo.update_page');
+    Route::post('/seo/global', [\App\Http\Controllers\Admin\SeoController::class, 'updateGlobal'])->name('seo.update_global');
+    Route::post('/seo/sitemap', [\App\Http\Controllers\Admin\SeoController::class, 'generateSitemap'])->name('seo.generate_sitemap');
+    
+    // Уроки
     Route::post('/modules/{module}/lessons', [AdminLessonController::class, 'store'])->name('lessons.store');
+    Route::post('/lessons/{lesson}', [AdminLessonController::class, 'update'])->name('lessons.update');
+    Route::delete('/lessons/{lesson}', [AdminLessonController::class, 'destroy'])->name('lessons.destroy');
+    Route::delete('/lesson-assets/{asset}', [AdminLessonController::class, 'removeAsset'])->name('lessons.remove-asset');
 });
+
+// Стриминг медиа с поддержкой перемотки
+Route::get('/stream/{path}', [\App\Http\Controllers\StreamController::class, 'stream'])
+    ->where('path', '.*')
+    ->name('stream');
 
 require __DIR__.'/auth.php';

@@ -30,11 +30,28 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $path = $request->path() === '/' ? 'home' : $request->path();
+        
+        // Check if it's a known static page
+        $knownPages = ['home', 'catalog', 'login', 'register'];
+        $seoPage = in_array($path, $knownPages) ? $path : 'home';
+
+        $seo = \App\Models\SeoSetting::where('page', $seoPage)->first();
+        $favicon = \App\Models\GlobalSetting::where('key', 'favicon_path')->first()?->value;
+        $headScripts = \App\Models\GlobalSetting::where('key', 'head_scripts')->first()?->value;
+        $bodyScripts = \App\Models\GlobalSetting::where('key', 'body_scripts')->first()?->value;
+
         return [
             ...parent::share($request),
             'auth' => [
                 'user' => $request->user(),
-                'is_admin' => $request->user() ? $request->user()->email === 'admin@admin.com' : false, // Добавим проверку на админа
+                'is_admin' => $request->user() ? $request->user()->email === 'admin@admin.com' : false,
+            ],
+            'seo' => $seo,
+            'global_seo' => [
+                'favicon' => $favicon ? "/storage/$favicon" : null,
+                'head_scripts' => $headScripts,
+                'body_scripts' => $bodyScripts,
             ],
             'flash' => [
                 'message' => $request->session()->get('message'),

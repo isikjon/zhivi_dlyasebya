@@ -23,6 +23,17 @@ class ModuleController extends Controller
         return back()->with('message', 'Модуль успешно добавлен');
     }
 
+    public function update(Request $request, Module $module)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+        ]);
+
+        $module->update($validated);
+
+        return back()->with('message', 'Модуль обновлен');
+    }
+
     public function destroy(Module $module)
     {
         $module->delete();

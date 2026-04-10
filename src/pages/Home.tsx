@@ -147,6 +147,14 @@ export default function Home({ courses = [], siteContent = {} }) {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="group relative bg-quantum-graphite/40 backdrop-blur-md rounded-[40px] overflow-hidden border border-white/5 hover:border-quantum-amber/30 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full shadow-2xl"
               >
+                <div className="aspect-[16/10] overflow-hidden relative">
+                  <img 
+                    src={prog.image} 
+                    alt={prog.title} 
+                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-quantum-emerald/20 group-hover:opacity-0 transition-opacity duration-500"></div>
+                </div>
                 <div className="p-8 md:p-10 relative flex flex-col flex-1">
                   <div className="flex items-center gap-2 mb-4">
                     <div className="w-1.5 h-1.5 rounded-full bg-quantum-amber"></div>
@@ -154,12 +162,12 @@ export default function Home({ courses = [], siteContent = {} }) {
                   </div>
                   
                   <h3 className="font-display text-2xl md:text-3xl font-bold mb-6 line-clamp-2 leading-tight text-quantum-ivory">{prog.title}</h3>
-                  <p className="text-quantum-ivory/60 text-sm leading-relaxed mb-8 line-clamp-3">{prog.description}</p>
+                  <p className="text-quantum-ivory/60 text-sm leading-relaxed mb-8 line-clamp-3">{prog.subtitle}</p>
                   
                   <div className="mt-auto pt-8 border-t border-white/5 flex flex-col gap-6">
                     <div className="flex items-center justify-between">
                       <div className="font-display text-3xl font-bold text-quantum-ivory">
-                        {prog.price} ₽
+                        {prog.price}
                       </div>
                       <a href={`/catalog`} className="text-quantum-amber hover:translate-x-1 transition-transform">
                         <ChevronRight size={24} />

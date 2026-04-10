@@ -3,16 +3,50 @@ import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { X, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function AuthenticatedLayout({ header, children }) {
-    const user = usePage().props.auth.user;
+    const { auth, flash } = usePage().props;
+    const user = auth.user;
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
 
+    const [notification, setNotification] = useState(null);
+
+    useEffect(() => {
+        if (flash?.message) {
+            setNotification({ type: 'success', text: flash.message });
+            const timer = setTimeout(() => setNotification(null), 5000);
+            return () => clearTimeout(timer);
+        }
+        if (flash?.error) {
+            setNotification({ type: 'error', text: flash.error });
+            const timer = setTimeout(() => setNotification(null), 7000);
+            return () => clearTimeout(timer);
+        }
+    }, [flash]);
+
     return (
         <div className="min-h-screen relative">
+            {/* Глобальные уведомления */}
+            {notification && (
+                <div className="fixed top-20 right-4 z-[9999] animate-in slide-in-from-right-full duration-300">
+                    <div className={`flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border ${
+                        notification.type === 'success' 
+                        ? 'bg-green-900/90 border-green-500/50 text-green-100' 
+                        : 'bg-red-900/90 border-red-500/50 text-red-100'
+                    } backdrop-blur-md`}>
+                        {notification.type === 'success' ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
+                        <span className="text-sm font-medium">{notification.text}</span>
+                        <button onClick={() => setNotification(null)} className="ml-2 hover:opacity-70 transition-opacity">
+                            <X size={16} />
+                        </button>
+                    </div>
+                </div>
+            )}
+
             <nav className="border-b border-white/10 bg-quantum-emerald/80 backdrop-blur-md sticky top-0 z-50">
                 <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="flex h-16 justify-between">
