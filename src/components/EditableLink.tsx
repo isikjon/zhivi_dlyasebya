@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useForm, usePage } from '@inertiajs/react';
+import React, { useState, useEffect } from 'react';
+import { usePage, router } from '@inertiajs/react';
 import { Check, X, Link as LinkIcon, Edit3, Loader2 } from 'lucide-react';
 
 export const EditableLink = ({ section, itemKey, children, className = "", defaultHref = "#" }) => {
@@ -8,33 +8,38 @@ export const EditableLink = ({ section, itemKey, children, className = "", defau
     
     // Получаем текущие значения из БД или используем дефолтные
     const savedData = siteContent?.[section]?.[itemKey];
-    let initialLabel = children;
-    let initialHref = defaultHref;
-
-    if (savedData) {
-        try {
-            const parsed = JSON.parse(savedData);
-            initialLabel = parsed.label || children;
-            initialHref = parsed.href || defaultHref;
-        } catch (e) {
-            // Если в базе просто строка (старый формат), используем её как label
-            initialLabel = savedData;
+    
+    const parseSavedData = (data) => {
+        let label = children;
+        let href = defaultHref;
+        if (data) {
+            try {
+                const parsed = JSON.parse(data);
+                label = parsed.label || children;
+                href = parsed.href || defaultHref;
+            } catch (e) {
+                label = data;
+            }
         }
-    }
+        return { label, href };
+    };
 
+    const initial = parseSavedData(savedData);
     const [isEditing, setIsEditing] = useState(false);
-    const [label, setLabel] = useState(initialLabel);
-    const [href, setHref] = useState(initialHref);
+    const [label, setLabel] = useState(initial.label);
+    const [href, setHref] = useState(initial.href);
     
-    const [tempLabel, setTempLabel] = useState(initialLabel);
-    const [tempHref, setTempHref] = useState(initialHref);
+    const [tempLabel, setTempLabel] = useState(initial.label);
+    const [tempHref, setTempHref] = useState(initial.href);
     
-    const { post, processing } = useForm({
-        page: 'home',
-        section: section,
-        key: itemKey,
-        value: ''
-    });
+    // Обновляем, если данные пришли с сервера
+    useEffect(() => {
+        const current = parseSavedData(siteContent?.[section]?.[itemKey]);
+        setLabel(current.label);
+        setHref(current.href);
+        setTempLabel(current.label);
+        setTempHref(current.href);
+    }, [siteContent, section, itemKey]);
 
     const handleDoubleClick = (e) => {
         if (!isAdmin) return;
@@ -45,21 +50,27 @@ export const EditableLink = ({ section, itemKey, children, className = "", defau
         setIsEditing(true);
     };
 
+    const [processing, setProcessing] = useState(false);
+
     const handleSave = (e) => {
         e.preventDefault();
+        setProcessing(true);
         const newValue = JSON.stringify({ label: tempLabel, href: tempHref });
         
-        post(route('admin.content.update_by_key', {
+        router.post(route('admin.content.update_by_key'), {
             page: 'home',
             section: section,
             key: itemKey,
             value: newValue
-        }), {
+        }, {
             onSuccess: () => {
                 setLabel(tempLabel);
                 setHref(tempHref);
                 setIsEditing(false);
-            }
+                setProcessing(false);
+            },
+            onError: () => setProcessing(false),
+            preserveScroll: true
         });
     };
 

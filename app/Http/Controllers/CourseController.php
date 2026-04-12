@@ -95,12 +95,20 @@ class CourseController extends Controller
             ->where('lesson_id', $lesson->id)
             ->first();
 
+        $completedLessonIds = \App\Models\LessonProgress::where('user_id', Auth::id())
+            ->where('is_completed', true)
+            ->pluck('lesson_id')
+            ->toArray();
+
         return Inertia::render('Cabinet/Lesson/Show', [
             'lesson' => $lesson->load(['module.course', 'assets']),
-            'course' => $course->load(['modules.lessons' => function($q) {
+            'course' => $course->load(['modules' => function($q) {
+                $q->orderBy('order');
+            }, 'modules.lessons' => function($q) {
                 $q->orderBy('order');
             }]),
-            'is_completed' => $progress ? $progress->is_completed : false
+            'is_completed' => $progress ? $progress->is_completed : false,
+            'completedLessonIds' => $completedLessonIds
         ]);
     }
 

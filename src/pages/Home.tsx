@@ -138,7 +138,7 @@ export default function Home({ courses = [], siteContent = {} }) {
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {courses.filter(c => c.price > 0).map((prog, i) => (
+            {courses.slice(0, 3).map((prog, i) => (
               <motion.div 
                 key={prog.id}
                 initial={{ opacity: 0, y: 30 }}
@@ -149,7 +149,7 @@ export default function Home({ courses = [], siteContent = {} }) {
               >
                 <div className="aspect-[16/10] overflow-hidden relative">
                   <img 
-                    src={prog.image} 
+                    src={prog.image_path ? `/storage/${prog.image_path}` : "https://picsum.photos/seed/prog/600/400"} 
                     alt={prog.title} 
                     className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
                   />
@@ -162,12 +162,12 @@ export default function Home({ courses = [], siteContent = {} }) {
                   </div>
                   
                   <h3 className="font-display text-2xl md:text-3xl font-bold mb-6 line-clamp-2 leading-tight text-quantum-ivory">{prog.title}</h3>
-                  <p className="text-quantum-ivory/60 text-sm leading-relaxed mb-8 line-clamp-3">{prog.subtitle}</p>
+                  <p className="text-quantum-ivory/60 text-sm leading-relaxed mb-8 line-clamp-3">{prog.description}</p>
                   
                   <div className="mt-auto pt-8 border-t border-white/5 flex flex-col gap-6">
                     <div className="flex items-center justify-between">
                       <div className="font-display text-3xl font-bold text-quantum-ivory">
-                        {prog.price}
+                        {prog.price == 0 ? 'Бесплатно' : `${prog.price} ₽`}
                       </div>
                       <a href={`/catalog`} className="text-quantum-amber hover:translate-x-1 transition-transform">
                         <ChevronRight size={24} />
@@ -185,9 +185,15 @@ export default function Home({ courses = [], siteContent = {} }) {
                       </a>
                       <Button 
                         className="flex-1 py-4 text-xs font-bold uppercase tracking-widest bg-quantum-amber text-quantum-emerald hover:bg-quantum-amber/90"
-                        onClick={() => window.open('https://t.me/victoria_neustroeva', '_blank')}
+                        onClick={() => {
+                          if (prog.price == 0) {
+                            window.location.href = `/cabinet/course/${prog.id}`;
+                          } else {
+                            window.open('https://t.me/victoria_neustroeva', '_blank');
+                          }
+                        }}
                       >
-                        Купить
+                        {prog.price == 0 ? 'Начать' : 'Купить'}
                       </Button>
                     </div>
                   </div>

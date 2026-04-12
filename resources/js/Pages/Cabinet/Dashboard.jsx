@@ -2,7 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
 import { BookOpen, CheckCircle2, PlayCircle, Clock, Sparkles, ChevronRight, Image as ImageIcon } from 'lucide-react';
 
-export default function Dashboard({ myCourses, availableCourses }) {
+export default function Dashboard({ myCourses, availableCourses, seo }) {
     const enroll = (courseId) => {
         router.post(route('cabinet.course.enroll', courseId));
     };
@@ -15,7 +15,7 @@ export default function Dashboard({ myCourses, availableCourses }) {
                 </h2>
             }
         >
-            <Head title="Мои курсы" />
+            <Head title={seo?.title || "Мои курсы"} />
 
             <div className="py-12 relative z-10">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 space-y-12">

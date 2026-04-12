@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class SeoController extends Controller
 {
@@ -16,7 +18,7 @@ class SeoController extends Controller
     {
         return Inertia::render('Admin/Seo/Index', [
             'seoSettings' => SeoSetting::all(),
-            'robots' => GlobalSetting::where('key', 'robots_txt')->first()?->value ?? File::get(public_path('robots.txt')),
+            'robots' => GlobalSetting::where('key', 'robots_txt')->first()?->value ?? (File::exists(public_path('robots.txt')) ? File::get(public_path('robots.txt')) : ''),
             'favicon' => GlobalSetting::where('key', 'favicon_path')->first()?->value,
             'scripts' => [
                 'head' => GlobalSetting::where('key', 'head_scripts')->first()?->value,
@@ -63,11 +65,59 @@ class SeoController extends Controller
         }
 
         if ($request->hasFile('favicon')) {
-            $path = $request->file('favicon')->store('assets', 'public');
-            GlobalSetting::updateOrCreate(['key' => 'favicon_path'], ['value' => $path]);
+            $image = $request->file('favicon');
             
-            // Also copy to public/favicon.ico for standard browser behavior
-            // We might need to convert it if it's not .ico, but let's just use the path in blade for now
+            // Create image manager with desired driver
+            $manager = new ImageManager(new Driver());
+            
+            // Generate various sizes
+            $sizes = [
+                ['name' => 'favicon-16x16.png', 'size' => 16],
+                ['name' => 'favicon-32x32.png', 'size' => 32],
+                ['name' => 'apple-touch-icon.png', 'size' => 180],
+                ['name' => 'android-chrome-192x192.png', 'size' => 192],
+                ['name' => 'android-chrome-512x512.png', 'size' => 512],
+            ];
+
+            foreach ($sizes as $s) {
+                $img = $manager->decode($image->getRealPath());
+                $img->cover($s['size'], $s['size']);
+                $img->save(public_path($s['name']));
+            }
+
+            // Also save as favicon.ico (standard fallback)
+            $img = $manager->decode($image->getRealPath());
+            $img->cover(48, 48);
+            // Save as PNG then rename to .ico to bypass GD's lack of ICO support
+            $icoPath = public_path('favicon.ico');
+            $img->save(public_path('favicon-48x48.png'));
+            if (File::exists($icoPath)) File::delete($icoPath);
+            File::move(public_path('favicon-48x48.png'), $icoPath);
+
+            // Generate site.webmanifest
+            $manifest = [
+                'name' => config('app.name'),
+                'short_name' => config('app.name'),
+                'icons' => [
+                    [
+                        'src' => '/android-chrome-192x192.png',
+                        'sizes' => '192x192',
+                        'type' => 'image/png'
+                    ],
+                    [
+                        'src' => '/android-chrome-512x512.png',
+                        'sizes' => '512x512',
+                        'type' => 'image/png'
+                    ]
+                ],
+                'theme_color' => '#0A2E2E',
+                'background_color' => '#0A2E2E',
+                'display' => 'standalone'
+            ];
+            File::put(public_path('site.webmanifest'), json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+
+            // Store the path of the largest one or just mark as updated
+            GlobalSetting::updateOrCreate(['key' => 'favicon_path'], ['value' => 'android-chrome-512x512.png']);
         }
 
         return back()->with('message', 'Глобальные SEO настройки обновлены');

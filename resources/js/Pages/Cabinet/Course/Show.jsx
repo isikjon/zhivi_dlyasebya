@@ -3,9 +3,10 @@ import { Head, Link } from '@inertiajs/react';
 import { PlayCircle, Clock, BookOpen, ChevronRight, CheckCircle2 } from 'lucide-react';
 
 export default function Show({ course, completedLessonIds = [] }) {
-    const totalLessons = course.modules.reduce((acc, m) => acc + m.lessons.length, 0);
-    const completedCount = completedLessonIds.length;
-    const progressPercent = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
+    const allLessonIds = course.modules.flatMap(m => m.lessons.map(l => l.id));
+    const totalLessons = allLessonIds.length;
+    const completedCount = (completedLessonIds || []).filter(id => allLessonIds.includes(id)).length;
+    const progressPercent = totalLessons > 0 ? Math.min(100, Math.round((completedCount / totalLessons) * 100)) : 0;
 
     return (
         <AuthenticatedLayout

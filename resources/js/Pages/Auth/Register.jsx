@@ -2,7 +2,7 @@ import InputError from '@/Components/InputError';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { User, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 
-export default function Register() {
+export default function Register({ seo }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
@@ -19,7 +19,7 @@ export default function Register() {
 
     return (
         <div className="space-y-6">
-            <Head title="Регистрация" />
+            <Head title={seo?.title || "Регистрация"} />
 
             <div className="text-center space-y-2">
                 <h1 className="text-2xl font-bold text-quantum-ivory font-syne uppercase tracking-tight">

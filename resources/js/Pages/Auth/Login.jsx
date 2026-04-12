@@ -2,7 +2,7 @@ import InputError from '@/Components/InputError';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 
-export default function Login({ status, canResetPassword }) {
+export default function Login({ status, canResetPassword, seo }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
@@ -18,7 +18,7 @@ export default function Login({ status, canResetPassword }) {
 
     return (
         <div className="space-y-6">
-            <Head title="Вход в личный кабинет" />
+            <Head title={seo?.title || "Вход в личный кабинет"} />
 
             <div className="text-center space-y-2">
                 <h1 className="text-2xl font-bold text-quantum-ivory font-syne uppercase tracking-tight">

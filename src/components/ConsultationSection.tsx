@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { UserCheck, Calendar, MessageSquare, Send, CheckCircle2, Sparkles, Star, ArrowRight, Clock, ChevronRight, ChevronLeft } from 'lucide-react';
+import { UserCheck, Calendar, MessageSquare, Send, CheckCircle2, Sparkles, Star, ArrowRight, Clock, ChevronRight, ChevronLeft, X } from 'lucide-react';
 import { Button } from './Button';
 import { EditableText } from './EditableText';
 import { EditableLink } from './EditableLink';
+import { useForm } from '@inertiajs/react';
 
 // Mock data for available slots
 const MOCK_AVAILABILITY: Record<string, string[]> = {
@@ -21,7 +22,6 @@ const MONTH_NAMES = ['янв', 'фев', 'мар', 'апр', 'май', 'июн',
 
 export function ConsultationSection() {
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [selectedDateIdx, setSelectedDateIdx] = useState(0);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
@@ -37,16 +37,25 @@ export function ConsultationSection() {
         dayName: DAY_NAMES[date.getDay()],
         dayNum: date.getDate(),
         month: MONTH_NAMES[date.getMonth()],
-        fullDate: date.toLocaleDateString('ru-RU')
+        fullDate: date.toLocaleDateString('ru-RU'),
+        isoDate: date.toISOString().split('T')[0]
       });
     }
     return days;
   }, []);
 
   const currentDayAvailability = useMemo(() => {
-    const dayName = nextSevenDays[selectedDateIdx].dayName;
+    const dayName = nextSevenDays[selectedDateIdx]?.dayName || 'Пн';
     return MOCK_AVAILABILITY[dayName] || [];
   }, [selectedDateIdx, nextSevenDays]);
+
+  const { data, setData, post, processing, errors, reset } = useForm({
+    name: '',
+    contact: '',
+    date: nextSevenDays[0]?.isoDate || '',
+    time: '',
+    request: ''
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,16 +63,75 @@ export function ConsultationSection() {
       alert('Пожалуйста, выбери удобное время');
       return;
     }
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsSubmitted(true);
-    }, 1500);
+    
+    post(route('consultation.store'), {
+      onSuccess: () => {
+        setIsSubmitted(true);
+        reset();
+        setSelectedTime(null);
+      },
+      preserveScroll: true
+    });
+  };
+
+  const handleDateSelect = (i: number) => {
+    setSelectedDateIdx(i);
+    setSelectedTime(null);
+    setData(prev => ({
+      ...prev,
+      date: nextSevenDays[i].isoDate,
+      time: ''
+    }));
+  };
+
+  const handleTimeSelect = (time: string) => {
+    setSelectedTime(time);
+    setData('time', time);
   };
 
   return (
     <section id="consultation" className="py-24 px-4 relative overflow-hidden">
+      {/* Красивая Модалка успеха */}
+      <AnimatePresence>
+        {isSubmitted && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-quantum-graphite/90 backdrop-blur-md"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 20 }}
+              className="bg-quantum-emerald border border-white/10 p-10 rounded-[40px] max-w-lg w-full text-center relative shadow-2xl overflow-hidden"
+            >
+              {/* Декоративный свет */}
+              <div className="absolute -top-24 -right-24 w-48 h-48 bg-quantum-amber/20 blur-[60px] rounded-full"></div>
+              
+              <div className="relative z-10">
+                <div className="w-24 h-24 bg-quantum-amber/20 rounded-full flex items-center justify-center text-quantum-amber mx-auto mb-8 border border-quantum-amber/30">
+                  <CheckCircle2 size={48} className="animate-in zoom-in duration-500" />
+                </div>
+                
+                <h3 className="font-display text-3xl font-bold text-quantum-ivory mb-4 uppercase tracking-tight">Заявка принята!</h3>
+                <p className="text-quantum-ivory/70 mb-10 leading-relaxed">
+                  Ты успешно записана на консультацию. <br/>
+                  Я свяжусь с тобой в ближайшее время для подтверждения.
+                </p>
+                
+                <Button 
+                  onClick={() => setIsSubmitted(false)}
+                  className="w-full py-5 bg-quantum-amber text-quantum-emerald font-bold uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all"
+                >
+                  Отлично, жду!
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Background Elements */}
       <div className="absolute top-0 left-0 w-full h-full bg-quantum-graphite z-0"></div>
       <div className="absolute top-1/4 -right-1/4 w-1/2 h-1/2 bg-quantum-rose/5 blur-[120px] rounded-full z-0"></div>
@@ -172,150 +240,128 @@ export function ConsultationSection() {
               {/* Decorative glow */}
               <div className="absolute -top-24 -right-24 w-48 h-48 bg-quantum-amber/10 blur-[60px] rounded-full group-hover:bg-quantum-amber/20 transition-all duration-700"></div>
               
-              <AnimatePresence mode="wait">
-                {!isSubmitted ? (
-                  <motion.div
-                    key="form"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="relative z-10"
-                  >
-                    <h3 className="font-display text-2xl font-bold text-quantum-ivory mb-2">
-                      <EditableText section="Consultation" itemKey="form_title">Запись на консультацию</EditableText>
-                    </h3>
-                    <p className="text-quantum-ivory/60 mb-6 font-light text-sm">
-                      <EditableText section="Consultation" itemKey="form_subtitle">Выбери удобный день и время для встречи.</EditableText>
-                    </p>
+              <div className="relative z-10">
+                <h3 className="font-display text-2xl font-bold text-quantum-ivory mb-2">
+                  <EditableText section="Consultation" itemKey="form_title">Запись на консультацию</EditableText>
+                </h3>
+                <p className="text-quantum-ivory/60 mb-6 font-light text-sm">
+                  <EditableText section="Consultation" itemKey="form_subtitle">Выбери удобный день и время для встречи.</EditableText>
+                </p>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      {/* Date Selection */}
-                      <div className="space-y-3">
-                        <label className="text-[10px] uppercase tracking-widest text-quantum-ivory/40 font-bold ml-1">1. Выбери день</label>
-                        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                          {nextSevenDays.map((day, i) => (
-                            <button
-                              key={i}
-                              type="button"
-                              onClick={() => {
-                                setSelectedDateIdx(i);
-                                setSelectedTime(null);
-                              }}
-                              className={`flex flex-col items-center justify-center min-w-[60px] h-20 rounded-2xl border transition-all duration-300 ${
-                                selectedDateIdx === i 
-                                  ? 'bg-quantum-amber border-quantum-amber text-quantum-emerald' 
-                                  : 'bg-white/5 border-white/10 text-quantum-ivory hover:border-white/30'
-                              }`}
-                            >
-                              <span className={`text-[10px] uppercase font-bold ${selectedDateIdx === i ? 'text-quantum-emerald/60' : 'text-quantum-ivory/40'}`}>
-                                {day.dayName}
-                              </span>
-                              <span className="text-xl font-display font-bold">{day.dayNum}</span>
-                              <span className={`text-[10px] ${selectedDateIdx === i ? 'text-quantum-emerald/60' : 'text-quantum-ivory/40'}`}>
-                                {day.month}
-                              </span>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Time Selection */}
-                      <div className="space-y-3">
-                        <label className="text-[10px] uppercase tracking-widest text-quantum-ivory/40 font-bold ml-1">2. Выбери время</label>
-                        <div className="grid grid-cols-4 gap-2">
-                          {currentDayAvailability.length > 0 ? (
-                            currentDayAvailability.map((time) => (
-                              <button
-                                key={time}
-                                type="button"
-                                onClick={() => setSelectedTime(time)}
-                                className={`py-3 rounded-xl border text-sm font-medium transition-all duration-300 ${
-                                  selectedTime === time
-                                    ? 'bg-quantum-amber border-quantum-amber text-quantum-emerald'
-                                    : 'bg-white/5 border-white/10 text-quantum-ivory hover:border-white/30'
-                                }`}
-                              >
-                                {time}
-                              </button>
-                            ))
-                          ) : (
-                            <div className="col-span-4 py-4 text-center text-quantum-ivory/40 text-sm italic">
-                              На этот день нет свободных слотов
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Contact Info */}
-                      <div className="space-y-4 pt-2">
-                        <label className="text-[10px] uppercase tracking-widest text-quantum-ivory/40 font-bold ml-1">3. Твои контакты</label>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <input 
-                            required
-                            type="text" 
-                            placeholder="Имя"
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-quantum-ivory placeholder:text-white/20 focus:outline-none focus:border-quantum-amber/50 focus:bg-white/10 transition-all text-sm"
-                          />
-                          <input 
-                            required
-                            type="text" 
-                            placeholder="Telegram / Телефон"
-                            className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-quantum-ivory placeholder:text-white/20 focus:outline-none focus:border-quantum-amber/50 focus:bg-white/10 transition-all text-sm"
-                          />
-                        </div>
-                        <textarea 
-                          rows={2}
-                          placeholder="Твой запрос (кратко)"
-                          className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-quantum-ivory placeholder:text-white/20 focus:outline-none focus:border-quantum-amber/50 focus:bg-white/10 transition-all resize-none text-sm"
-                        ></textarea>
-                      </div>
-
-                      <Button 
-                        disabled={isLoading || !selectedTime}
-                        className="w-full py-5 text-base font-bold uppercase tracking-wider bg-quantum-amber text-quantum-emerald hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:hover:scale-100"
-                      >
-                        {isLoading ? (
-                          <div className="flex items-center gap-2">
-                            <div className="w-5 h-5 border-2 border-quantum-emerald/30 border-t-quantum-emerald rounded-full animate-spin"></div>
-                            <span>Отправка...</span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2">
-                            <span>Записаться на {selectedTime || '...'}</span>
-                            <Send size={18} />
-                          </div>
-                        )}
-                      </Button>
-
-                      <p className="text-[10px] text-center text-quantum-ivory/30 uppercase tracking-widest">
-                        Нажимая кнопку, ты соглашаешься с политикой конфиденциальности
-                      </p>
-                    </form>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="success"
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="text-center py-12 relative z-10"
-                  >
-                    <div className="w-20 h-20 bg-quantum-amber/20 rounded-full flex items-center justify-center text-quantum-amber mx-auto mb-6 border border-quantum-amber/30">
-                      <CheckCircle2 size={40} />
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* Date Selection */}
+                  <div className="space-y-3">
+                    <label className="text-[10px] uppercase tracking-widest text-quantum-ivory/40 font-bold ml-1">1. Выбери день</label>
+                    <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                      {nextSevenDays.map((day, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => handleDateSelect(i)}
+                          className={`flex flex-col items-center justify-center min-w-[60px] h-20 rounded-2xl border transition-all duration-300 ${
+                            selectedDateIdx === i 
+                              ? 'bg-quantum-amber border-quantum-amber text-quantum-emerald' 
+                              : 'bg-white/5 border-white/10 text-quantum-ivory hover:border-white/30'
+                          }`}
+                        >
+                          <span className={`text-[10px] uppercase font-bold ${selectedDateIdx === i ? 'text-quantum-emerald/60' : 'text-quantum-ivory/40'}`}>
+                            {day.dayName}
+                          </span>
+                          <span className="text-xl font-display font-bold">{day.dayNum}</span>
+                          <span className={`text-[10px] ${selectedDateIdx === i ? 'text-quantum-emerald/60' : 'text-quantum-ivory/40'}`}>
+                            {day.month}
+                          </span>
+                        </button>
+                      ))}
                     </div>
-                    <h3 className="font-display text-3xl font-bold text-quantum-ivory mb-4">Заявка принята!</h3>
-                    <p className="text-quantum-ivory/60 mb-8 max-w-xs mx-auto font-light">
-                      Ты записана на <span className="text-quantum-amber font-bold">{nextSevenDays[selectedDateIdx].fullDate} в {selectedTime}</span>. Я свяжусь с тобой в ближайшее время.
-                    </p>
-                    <Button 
-                      variant="outline"
-                      onClick={() => setIsSubmitted(false)}
-                      className="border-white/10 text-white hover:bg-white/5"
-                    >
-                      Вернуться
-                    </Button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                  </div>
+
+                  {/* Time Selection */}
+                  <div className="space-y-3">
+                    <label className="text-[10px] uppercase tracking-widest text-quantum-ivory/40 font-bold ml-1">2. Выбери время</label>
+                    <div className="grid grid-cols-4 gap-2">
+                      {currentDayAvailability.length > 0 ? (
+                        currentDayAvailability.map((time) => (
+                          <button
+                            key={time}
+                            type="button"
+                            onClick={() => handleTimeSelect(time)}
+                            className={`py-3 rounded-xl border text-sm font-medium transition-all duration-300 ${
+                              selectedTime === time
+                                ? 'bg-quantum-amber border-quantum-amber text-quantum-emerald'
+                                : 'bg-white/5 border-white/10 text-quantum-ivory hover:border-white/30'
+                            }`}
+                          >
+                            {time}
+                          </button>
+                        ))
+                      ) : (
+                        <div className="col-span-4 py-4 text-center text-quantum-ivory/40 text-sm italic">
+                          На этот день нет свободных слотов
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Contact Info */}
+                  <div className="space-y-4 pt-2">
+                    <label className="text-[10px] uppercase tracking-widest text-quantum-ivory/40 font-bold ml-1">3. Твои контакты</label>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <input 
+                          required
+                          type="text" 
+                          value={data.name}
+                          onChange={e => setData('name', e.target.value)}
+                          placeholder="Имя"
+                          className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-quantum-ivory placeholder:text-white/20 focus:outline-none focus:border-quantum-amber/50 focus:bg-white/10 transition-all text-sm"
+                        />
+                        {errors.name && <p className="text-[10px] text-red-500 ml-2">{errors.name}</p>}
+                      </div>
+                      <div className="space-y-1">
+                        <input 
+                          required
+                          type="text" 
+                          value={data.contact}
+                          onChange={e => setData('contact', e.target.value)}
+                          placeholder="+7 (___) ___-__-__ или @username"
+                          className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-quantum-ivory placeholder:text-white/20 focus:outline-none focus:border-quantum-amber/50 focus:bg-white/10 transition-all text-sm"
+                        />
+                        <p className="text-[8px] text-quantum-ivory/30 ml-2 uppercase">Укажите телефон или Telegram</p>
+                        {errors.contact && <p className="text-[10px] text-red-500 ml-2">{errors.contact}</p>}
+                      </div>
+                    </div>
+                    <textarea 
+                      rows={2}
+                      value={data.request}
+                      onChange={e => setData('request', e.target.value)}
+                      placeholder="Твой запрос (кратко)"
+                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-3 text-quantum-ivory placeholder:text-white/20 focus:outline-none focus:border-quantum-amber/50 focus:bg-white/10 transition-all resize-none text-sm"
+                    ></textarea>
+                  </div>
+
+                  <Button 
+                    disabled={processing || !selectedTime}
+                    className="w-full py-5 text-base font-bold uppercase tracking-wider bg-quantum-amber text-quantum-emerald hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:hover:scale-100"
+                  >
+                    {processing ? (
+                      <div className="flex items-center gap-2">
+                        <div className="w-5 h-5 border-2 border-quantum-emerald/30 border-t-quantum-emerald rounded-full animate-spin"></div>
+                        <span>Отправка...</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <span>Записаться на {selectedTime || '...'}</span>
+                        <Send size={18} />
+                      </div>
+                    )}
+                  </Button>
+
+                  <p className="text-[10px] text-center text-quantum-ivory/30 uppercase tracking-widest">
+                    Нажимая кнопку, ты соглашаешься с политикой конфиденциальности
+                  </p>
+                </form>
+              </div>
             </div>
 
             {/* Floating badge */}

@@ -17,22 +17,26 @@ export function EditableImage({
   alt, 
   ...props 
 }: EditableImageProps) {
-  const { auth } = usePage().props;
+  const { auth, siteContent } = usePage().props;
   const isAdmin = auth?.is_admin;
   
-  const [src, setSrc] = useState(defaultSrc);
+  const getInitialSrc = () => {
+      const saved = siteContent?.home?.[imageId]; // Используем imageId как ключ в БД
+      return saved ? `/storage/${saved}` : defaultSrc;
+  };
+
+  const [src, setSrc] = useState(getInitialSrc());
   const [isEditing, setIsEditing] = useState(false);
-  const [tempSrc, setTempSrc] = useState(defaultSrc);
+  const [tempSrc, setTempSrc] = useState(getInitialSrc());
+  const [tempFile, setTempFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const savedSrc = localStorage.getItem(`image_${imageId}`);
-    if (savedSrc) {
-      setSrc(savedSrc);
-      setTempSrc(savedSrc);
-    }
-  }, [imageId]);
+    const current = getInitialSrc();
+    setSrc(current);
+    setTempSrc(current);
+  }, [siteContent, imageId]);
 
   const handleImageClick = (e: React.MouseEvent) => {
     if (!isAdmin) return;
@@ -44,6 +48,7 @@ export function EditableImage({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setTempFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64String = reader.result as string;
@@ -54,14 +59,25 @@ export function EditableImage({
   };
 
   const handleSave = () => {
+    if (!tempFile) return;
+    
     setUploading(true);
-    // Имитируем сохранение
-    setTimeout(() => {
-        setSrc(tempSrc);
-        localStorage.setItem(`image_${imageId}`, tempSrc);
-        setUploading(false);
-        setIsEditing(false);
-    }, 1000);
+    const formData = new FormData();
+    formData.append('image', tempFile);
+    formData.append('page', 'home');
+    formData.append('section', 'home'); // Или передавать пропсом
+    formData.append('key', imageId);
+
+    router.post(route('admin.content.update'), formData, {
+        onSuccess: () => {
+            setUploading(false);
+            setIsEditing(false);
+            setTempFile(null);
+        },
+        onError: () => setUploading(false),
+        forceFormData: true,
+        preserveScroll: true
+    });
   };
 
   return (

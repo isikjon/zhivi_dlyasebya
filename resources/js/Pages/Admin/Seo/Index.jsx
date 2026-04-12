@@ -98,11 +98,11 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                                 <form onSubmit={submitGlobal} className="space-y-8 max-w-4xl">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div className="space-y-4">
-                                            <label className="block text-xs font-bold uppercase tracking-widest text-gray-500">Фавикон (ICO/PNG)</label>
+                                            <label className="block text-xs font-bold uppercase tracking-widest text-gray-500">Мастер-фавикон (512x512px)</label>
                                             <div className="flex items-center gap-4">
                                                 {favicon && (
                                                     <div className="w-12 h-12 bg-gray-900 rounded-lg border border-gray-700 flex items-center justify-center overflow-hidden">
-                                                        <img src={`/storage/${favicon}`} alt="Favicon" className="w-8 h-8 object-contain" />
+                                                        <img src={`/${favicon}`} alt="Favicon" className="w-8 h-8 object-contain" />
                                                     </div>
                                                 )}
                                                 <input 
@@ -111,6 +111,11 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                                                     className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-700 file:text-gray-200 hover:file:bg-gray-600"
                                                 />
                                             </div>
+                                            <p className="text-[10px] text-gray-500 mt-2 leading-relaxed">
+                                                Загрузите квадратное изображение размером <span className="text-quantum-amber">512x512px</span>. 
+                                                Система автоматически сгенерирует все форматы: 
+                                                <span className="text-quantum-amber ml-1">favicon.ico, 16x16, 32x32, Apple Touch Icon (180x180) и Android Manifest</span>.
+                                            </p>
                                         </div>
                                     </div>
 
@@ -259,6 +264,7 @@ function PageSeoForm({ page, initialData }) {
                                 className="w-full bg-gray-800 border-gray-700 rounded-xl text-sm text-gray-200 focus:ring-quantum-amber p-4"
                                 placeholder="Заголовок страницы в браузере"
                             />
+                            <p className="text-[10px] text-gray-500 mt-1 ml-1">Рекомендуется от 50 до 60 символов.</p>
                         </div>
                         <div className="space-y-2">
                             <label className="text-[10px] uppercase font-bold text-gray-500 ml-1">Meta Description</label>
@@ -269,6 +275,7 @@ function PageSeoForm({ page, initialData }) {
                                 className="w-full bg-gray-800 border-gray-700 rounded-xl text-sm text-gray-200 focus:ring-quantum-amber p-4"
                                 placeholder="Краткое описание для поисковиков"
                             ></textarea>
+                            <p className="text-[10px] text-gray-500 mt-1 ml-1">Рекомендуется от 140 до 160 символов.</p>
                         </div>
                         <div className="space-y-2">
                             <label className="text-[10px] uppercase font-bold text-gray-500 ml-1">Keywords</label>

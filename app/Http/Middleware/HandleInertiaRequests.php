@@ -30,13 +30,14 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        $path = $request->path() === '/' ? 'home' : $request->path();
+        $path = trim($request->path(), '/');
+        if ($path === '') $path = 'home';
         
         // Check if it's a known static page
         $knownPages = ['home', 'catalog', 'login', 'register'];
-        $seoPage = in_array($path, $knownPages) ? $path : 'home';
+        $seoPage = in_array($path, $knownPages) ? $path : null;
 
-        $seo = \App\Models\SeoSetting::where('page', $seoPage)->first();
+        $seo = $seoPage ? \App\Models\SeoSetting::where('page', $seoPage)->first() : null;
         $favicon = \App\Models\GlobalSetting::where('key', 'favicon_path')->first()?->value;
         $headScripts = \App\Models\GlobalSetting::where('key', 'head_scripts')->first()?->value;
         $bodyScripts = \App\Models\GlobalSetting::where('key', 'body_scripts')->first()?->value;

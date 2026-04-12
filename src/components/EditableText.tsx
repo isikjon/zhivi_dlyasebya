@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useForm, usePage } from '@inertiajs/react';
+import React, { useState, useEffect } from 'react';
+import { usePage, router } from '@inertiajs/react';
 import { Check, X, Edit3 } from 'lucide-react';
 
 export const EditableText = ({ section, itemKey, children, className = "", tag: Tag = "span" }) => {
@@ -10,13 +10,15 @@ export const EditableText = ({ section, itemKey, children, className = "", tag: 
     const [isEditing, setIsEditing] = useState(false);
     const [value, setValue] = useState(initialValue);
     const [tempValue, setTempValue] = useState(initialValue);
+    const [processing, setProcessing] = useState(false);
     
-    const { post, processing } = useForm({
-        page: 'home',
-        section: section,
-        key: itemKey,
-        value: ''
-    });
+    // Обновляем значение, если пропсы с сервера изменились
+    useEffect(() => {
+        if (siteContent?.[section]?.[itemKey]) {
+            setValue(siteContent[section][itemKey]);
+            setTempValue(siteContent[section][itemKey]);
+        }
+    }, [siteContent, section, itemKey]);
 
     const handleDoubleClick = (e) => {
         if (!isAdmin) return;
@@ -26,26 +28,20 @@ export const EditableText = ({ section, itemKey, children, className = "", tag: 
     };
 
     const handleSave = () => {
-        // Нам нужно найти ID контента. Для простоты в этом демо мы будем отправлять section/key
-        // Но лучше передавать ID. Для этого расширим API.
-        // Пока сделаем через специальный роут обновления по ключам.
-        
-        const formData = {
+        setProcessing(true);
+        router.post(route('admin.content.update_by_key'), {
             page: 'home',
             section: section,
             key: itemKey,
             value: tempValue
-        };
-
-        // Мы используем существующий роут, но нам нужен ID. 
-        // В реальном приложении мы бы получили ID из siteContent.
-        // Для быстрого решения добавим поиск по ключам в контроллер.
-        
-        post(route('admin.content.update_by_key', formData), {
+        }, {
             onSuccess: () => {
                 setValue(tempValue);
                 setIsEditing(false);
-            }
+                setProcessing(false);
+            },
+            onError: () => setProcessing(false),
+            preserveScroll: true
         });
     };
 
@@ -73,14 +69,14 @@ export const EditableText = ({ section, itemKey, children, className = "", tag: 
                         if (e.key === 'Escape') handleCancel();
                     }}
                 />
-                <div className="absolute -top-8 right-0 flex items-center space-x-1 bg-quantum-graphite border border-white/10 rounded shadow-xl p-1 z-[100]">
+                <span className="absolute -top-8 right-0 flex items-center space-x-1 bg-quantum-graphite border border-white/10 rounded shadow-xl p-1 z-[100]">
                     <button onClick={handleSave} disabled={processing} className="p-1 hover:bg-green-500/20 text-green-400 rounded">
                         <Check size={14} />
                     </button>
                     <button onClick={handleCancel} className="p-1 hover:bg-red-500/20 text-red-400 rounded">
                         <X size={14} />
                     </button>
-                </div>
+                </span>
             </Tag>
         );
     }
@@ -92,9 +88,9 @@ export const EditableText = ({ section, itemKey, children, className = "", tag: 
             title="Двойной клик для редактирования"
         >
             {value}
-            <div className="absolute -top-4 -right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-quantum-amber text-quantum-emerald rounded-full p-1 shadow-lg pointer-events-none">
+            <span className="absolute -top-4 -right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-quantum-amber text-quantum-emerald rounded-full p-1 shadow-lg pointer-events-none">
                 <Edit3 size={10} />
-            </div>
+            </span>
         </Tag>
     );
 };

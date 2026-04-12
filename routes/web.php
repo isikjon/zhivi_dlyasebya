@@ -97,4 +97,6 @@ Route::get('/stream/{path}', [\App\Http\Controllers\StreamController::class, 'st
     ->where('path', '.*')
     ->name('stream');
 
+Route::post('/consultation', [\App\Http\Controllers\ConsultationController::class, 'store'])->name('consultation.store');
+
 require __DIR__.'/auth.php';
