@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { EditableText } from './EditableText';
 import { EditableLink } from './EditableLink';
+import { usePage } from '@inertiajs/react';
 
 const results = [
   {
@@ -65,11 +66,16 @@ const forWhom = [
 
 export function MainProgramSection() {
   const { isAuthenticated } = useAuth();
+  const { mainCourse } = usePage().props as any;
   const navigate = useNavigate();
 
   const handleJoin = () => {
     if (isAuthenticated) {
-      navigate('/cabinet/dashboard');
+      if (mainCourse) {
+        navigate(`/cabinet/course/${mainCourse.id}`);
+      } else {
+        navigate('/cabinet/dashboard');
+      }
     } else {
       window.dispatchEvent(new CustomEvent('openAuthModal'));
     }
@@ -248,7 +254,9 @@ export function MainProgramSection() {
             </p>
             
             <div className="text-5xl md:text-6xl font-display font-bold text-quantum-amber mb-6">
-              <EditableText section="MainProgram" itemKey="cta_price">28 500 ₽</EditableText>
+              <EditableText section="MainProgram" itemKey="cta_price">
+                {mainCourse ? `${mainCourse.price} ₽` : '28 500 ₽'}
+              </EditableText>
             </div>
             
             <p className="text-quantum-ivory/80 mb-10 font-light">

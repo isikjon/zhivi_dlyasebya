@@ -12,8 +12,11 @@ import { MainProgramSection } from '../components/MainProgramSection';
 import { FeaturesSection } from '../components/FeaturesSection';
 import { TelegramLinksSection } from '../components/TelegramLinksSection';
 import { ConsultationSection } from '../components/ConsultationSection';
+import { usePage } from '@inertiajs/react';
 
-export default function Home({ courses = [], siteContent = {} }) {
+export default function Home({ courses = [], siteContent: localSiteContent = {} }) {
+  const { siteContent: sharedSiteContent } = usePage().props as any;
+  const siteContent = sharedSiteContent || localSiteContent;
   const hero = siteContent.Hero || {};
   const programs = siteContent.Programs || {};
   const freeCourse = siteContent.FreeCourse || {};
@@ -186,12 +189,12 @@ export default function Home({ courses = [], siteContent = {} }) {
                       <Button 
                         className="flex-1 py-4 text-xs font-bold uppercase tracking-widest bg-quantum-amber text-quantum-emerald hover:bg-quantum-amber/90"
                         onClick={() => {
-                          if (prog.price == 0) {
-                            window.location.href = `/cabinet/course/${prog.id}`;
-                          } else {
-                            window.open('https://t.me/victoria_neustroeva', '_blank');
-                          }
-                        }}
+                                  if (prog.price == 0) {
+                                    window.location.href = `/cabinet/course/${prog.id}`;
+                                  } else {
+                                    window.open(siteContent?.SocialNetworks?.telegram_link || 'https://t.me/victoria_neustroeva', '_blank');
+                                  }
+                                }}
                       >
                         {prog.price == 0 ? 'Начать' : 'Купить'}
                       </Button>

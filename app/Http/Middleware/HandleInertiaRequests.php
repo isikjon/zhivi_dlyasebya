@@ -54,6 +54,8 @@ class HandleInertiaRequests extends Middleware
                 'head_scripts' => $headScripts,
                 'body_scripts' => $bodyScripts,
             ],
+            'siteContent' => \App\Http\Controllers\Admin\ContentController::getContent('home'),
+            'mainCourse' => \App\Models\Course::where('is_main', true)->first(),
             'flash' => [
                 'message' => $request->session()->get('message'),
             ],

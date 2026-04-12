@@ -11,6 +11,7 @@ export default function Edit({ course }) {
         description: course.description || '',
         price: course.price,
         is_active: course.is_active,
+        is_main: course.is_main || false,
         image: null,
         _method: 'POST', // Используем POST для загрузки файлов, но Laravel поймет как UPDATE если нужно
     });
@@ -84,6 +85,20 @@ export default function Edit({ course }) {
                                     />
                                     <span className="ms-2 text-sm text-gray-600 dark:text-gray-400">Активен</span>
                                 </label>
+                            </div>
+
+                            <div className="mb-4">
+                                <label className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        name="is_main"
+                                        checked={data.is_main}
+                                        onChange={e => setData('is_main', e.target.checked)}
+                                        className="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                    />
+                                    <span className="ms-2 text-sm text-gray-600 dark:text-gray-400 font-bold text-quantum-amber uppercase tracking-widest">Основной курс (для главной страницы)</span>
+                                </label>
+                                <p className="text-[10px] text-gray-500 mt-1">Если выбрано, этот курс будет отображаться в блоке «Готова вернуться к себе?» на главной странице.</p>
                             </div>
 
                             <div className="mb-4">

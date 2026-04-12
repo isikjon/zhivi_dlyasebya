@@ -5,9 +5,11 @@ import { Link } from 'react-router-dom';
 import { Clock, Star, Filter, LayoutGrid, Sparkles, Heart, MapPin, ChevronRight } from 'lucide-react';
 import { EditableImage } from '../components/EditableImage';
 import { useCourses } from '../context/CourseContext';
+import { usePage } from '@inertiajs/react';
 
 export default function Catalog() {
   const { courses } = useCourses();
+  const { siteContent } = usePage().props as any;
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
   const categories = [
@@ -77,7 +79,7 @@ export default function Catalog() {
                 variant="outline" 
                 size="sm" 
                 className="w-full text-[10px] h-9"
-                onClick={() => window.open('https://t.me/victoria_neustroeva', '_blank')}
+                onClick={() => window.open(siteContent?.SocialNetworks?.telegram_link || 'https://t.me/victoria_neustroeva', '_blank')}
               >
                 Связаться
               </Button>
@@ -146,7 +148,7 @@ export default function Catalog() {
                             if (prog.category === 'free') {
                               window.location.href = `/cabinet/course/${prog.id}`;
                             } else {
-                              window.open('https://t.me/victoria_neustroeva', '_blank');
+                              window.open(siteContent?.SocialNetworks?.telegram_link || 'https://t.me/victoria_neustroeva', '_blank');
                             }
                           }}
                         >

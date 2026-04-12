@@ -84,7 +84,7 @@ export default function AdminLayout({ header, children }) {
                                     active={route().current('admin.content.*')}
                                     className="text-gray-300 hover:text-white"
                                 >
-                                    Редактор сайта
+                                    Контент
                                 </NavLink>
                                 <NavLink
                                     href={route('admin.seo.index')}

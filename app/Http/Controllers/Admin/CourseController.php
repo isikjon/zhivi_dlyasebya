@@ -29,8 +29,13 @@ class CourseController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
+            'is_main' => 'boolean',
             'image' => 'nullable|image|max:2048',
         ]);
+
+        if ($request->has('is_main') && $request->is_main) {
+            Course::where('is_main', true)->update(['is_main' => false]);
+        }
 
         if ($request->hasFile('image')) {
             $validated['image_path'] = $request->file('image')->store('courses', 'public');
@@ -56,7 +61,12 @@ class CourseController extends Controller
             'price' => 'required|numeric|min:0',
             'image' => 'nullable|image|max:2048',
             'is_active' => 'boolean',
+            'is_main' => 'boolean',
         ]);
+
+        if ($request->has('is_main') && $request->is_main) {
+            Course::where('id', '!=', $course->id)->where('is_main', true)->update(['is_main' => false]);
+        }
 
         if ($request->hasFile('image')) {
             // Можно добавить удаление старой картинки

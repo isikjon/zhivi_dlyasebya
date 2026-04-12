@@ -5,12 +5,28 @@ import { Menu, X, User, Phone, Mail, Send, LogIn, LogOut } from 'lucide-react';
 import { TestimonialsSection } from './TestimonialsSection';
 import { AuthModal } from './AuthModal';
 import { useAuth } from '../context/AuthContext';
+import { usePage } from '@inertiajs/react';
 
 export default function Layout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { isAuthenticated, logout, user } = useAuth();
+  
+  // Safely access siteContent from Inertia if available
+  let siteContent: any = {};
+  try {
+    const page = usePage();
+    if (page && page.props) {
+      siteContent = page.props.siteContent || {};
+    }
+  } catch (e) {
+    // If we're not in an Inertia context (e.g. standalone SPA development), 
+    // usePage will throw. We catch it here.
+  }
+
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+  const contacts = siteContent?.SocialNetworks || {};
 
   useEffect(() => {
     const handleOpenAuth = () => setIsAuthModalOpen(true);
@@ -181,15 +197,21 @@ export default function Layout() {
               <ul className="space-y-4 text-sm text-quantum-ivory/80">
                 <li className="flex items-center gap-3">
                   <Phone size={16} className="text-quantum-rose" />
-                  <a href="tel:+79990000000" className="hover:text-quantum-amber transition-colors">+7 (999) 000-00-00</a>
+                  <a href={`tel:${(contacts.phone || '+79990000000').replace(/[^\d+]/g, '')}`} className="hover:text-quantum-amber transition-colors">
+                    {contacts.phone || '+7 (999) 000-00-00'}
+                  </a>
                 </li>
                 <li className="flex items-center gap-3">
                   <Mail size={16} className="text-quantum-rose" />
-                  <a href="mailto:hello@zhivisebya.ru" className="hover:text-quantum-amber transition-colors">hello@zhivisebya.ru</a>
+                  <a href={`mailto:${contacts.email || 'hello@zhivisebya.ru'}`} className="hover:text-quantum-amber transition-colors">
+                    {contacts.email || 'hello@zhivisebya.ru'}
+                  </a>
                 </li>
                 <li className="flex items-center gap-3">
                   <Send size={16} className="text-quantum-rose" />
-                  <a href="https://t.me/victoria_neustroeva" target="_blank" rel="noreferrer" className="hover:text-quantum-amber transition-colors">@victoria_neustroeva</a>
+                  <a href={contacts.telegram_link || 'https://t.me/victoria_neustroeva'} target="_blank" rel="noreferrer" className="hover:text-quantum-amber transition-colors">
+                    {contacts.telegram || '@victoria_neustroeva'}
+                  </a>
                 </li>
               </ul>
             </div>
