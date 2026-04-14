@@ -34,7 +34,7 @@ class HandleInertiaRequests extends Middleware
         if ($path === '') $path = 'home';
         
         // Check if it's a known static page
-        $knownPages = ['home', 'catalog', 'login', 'register'];
+        $knownPages = ['home', 'catalog', 'login', 'register', 'live-yourself', 'archetypes'];
         $seoPage = in_array($path, $knownPages) ? $path : null;
 
         $seo = $seoPage ? \App\Models\SeoSetting::where('page', $seoPage)->first() : null;

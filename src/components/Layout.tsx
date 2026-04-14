@@ -71,10 +71,10 @@ export default function Layout() {
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center space-x-8">
               <a href="/" onClick={(e) => scrollToSection(e, 'hero')} className={`transition-colors text-sm uppercase tracking-widest font-medium ${currentPath === '/' ? 'text-quantum-amber' : 'text-quantum-ivory/80 hover:text-quantum-amber'}`}>Главная</a>
-              <a href="/#live-yourself" onClick={(e) => scrollToSection(e, 'live-yourself')} className={`transition-colors text-sm uppercase tracking-widest font-medium ${currentPath === '/' && window.location.hash === '#live-yourself' ? 'text-quantum-amber' : 'text-quantum-ivory/80 hover:text-quantum-amber'}`}>Живи Себя</a>
-              <a href="/#archetypes" onClick={(e) => scrollToSection(e, 'archetypes')} className={`transition-colors text-sm uppercase tracking-widest font-medium ${currentPath === '/' && window.location.hash === '#archetypes' ? 'text-quantum-amber' : 'text-quantum-ivory/80 hover:text-quantum-amber'}`}>Архетипы</a>
-              <a href="/#catalog" onClick={(e) => scrollToSection(e, 'catalog')} className={`transition-colors text-sm uppercase tracking-widest font-medium ${currentPath === '/' && window.location.hash === '#catalog' ? 'text-quantum-amber' : 'text-quantum-ivory/80 hover:text-quantum-amber'}`}>Программы</a>
-              <a href="/#free-course" onClick={(e) => scrollToSection(e, 'free-course')} className={`transition-colors text-sm uppercase tracking-widest font-medium ${currentPath === '/' && window.location.hash === '#free-course' ? 'text-quantum-amber' : 'text-quantum-ivory/80 hover:text-quantum-amber'}`}>Бесплатный курс</a>
+              <a href="/live-yourself" className={`transition-colors text-sm uppercase tracking-widest font-medium ${currentPath === '/live-yourself' ? 'text-quantum-amber' : 'text-quantum-ivory/80 hover:text-quantum-amber'}`}>Живи Себя</a>
+              <a href="/archetypes" className={`transition-colors text-sm uppercase tracking-widest font-medium ${currentPath === '/archetypes' ? 'text-quantum-amber' : 'text-quantum-ivory/80 hover:text-quantum-amber'}`}>Архетипы</a>
+              <a href="/catalog" className={`transition-colors text-sm uppercase tracking-widest font-medium ${currentPath === '/catalog' ? 'text-quantum-amber' : 'text-quantum-ivory/80 hover:text-quantum-amber'}`}>Программы</a>
+              <a href="/program/free" className={`transition-colors text-sm uppercase tracking-widest font-medium ${currentPath === '/program/free' ? 'text-quantum-amber' : 'text-quantum-ivory/80 hover:text-quantum-amber'}`}>Бесплатный курс</a>
               
               <div className="flex items-center space-x-4 pl-4 border-l border-white/10">
                 {isAuthenticated ? (
@@ -123,11 +123,11 @@ export default function Layout() {
         }}
         className="fixed inset-0 z-40 bg-quantum-emerald/95 backdrop-blur-xl flex flex-col items-center justify-center space-y-8 md:hidden"
       >
-        <a href="#hero" onClick={(e) => scrollToSection(e, 'hero')} className={`font-display text-3xl transition-colors ${currentPath === '/' ? 'text-quantum-amber' : 'hover:text-quantum-amber'}`}>Главная</a>
-        <a href="#live-yourself" onClick={(e) => scrollToSection(e, 'live-yourself')} className={`font-display text-3xl transition-colors ${currentPath === '/' && window.location.hash === '#live-yourself' ? 'text-quantum-amber' : 'hover:text-quantum-amber'}`}>Живи Себя</a>
-        <a href="#archetypes" onClick={(e) => scrollToSection(e, 'archetypes')} className={`font-display text-3xl transition-colors ${currentPath === '/' && window.location.hash === '#archetypes' ? 'text-quantum-amber' : 'hover:text-quantum-amber'}`}>Архетипы</a>
-        <a href="#catalog" onClick={(e) => scrollToSection(e, 'catalog')} className={`font-display text-3xl transition-colors ${currentPath === '/' && window.location.hash === '#catalog' ? 'text-quantum-amber' : 'hover:text-quantum-amber'}`}>Программы</a>
-        <a href="#free-course" onClick={(e) => scrollToSection(e, 'free-course')} className={`font-display text-3xl transition-colors ${currentPath === '/' && window.location.hash === '#free-course' ? 'text-quantum-amber' : 'hover:text-quantum-amber'}`}>Бесплатный курс</a>
+        <a href="/" onClick={(e) => scrollToSection(e, 'hero')} className={`font-display text-3xl transition-colors ${currentPath === '/' ? 'text-quantum-amber' : 'hover:text-quantum-amber'}`}>Главная</a>
+        <a href="/live-yourself" onClick={() => setIsMenuOpen(false)} className={`font-display text-3xl transition-colors ${currentPath === '/live-yourself' ? 'text-quantum-amber' : 'hover:text-quantum-amber'}`}>Живи Себя</a>
+        <a href="/archetypes" onClick={() => setIsMenuOpen(false)} className={`font-display text-3xl transition-colors ${currentPath === '/archetypes' ? 'text-quantum-amber' : 'hover:text-quantum-amber'}`}>Архетипы</a>
+        <a href="/catalog" onClick={() => setIsMenuOpen(false)} className={`font-display text-3xl transition-colors ${currentPath === '/catalog' ? 'text-quantum-amber' : 'hover:text-quantum-amber'}`}>Программы</a>
+        <a href="/program/free" onClick={() => setIsMenuOpen(false)} className={`font-display text-3xl transition-colors ${currentPath === '/program/free' ? 'text-quantum-amber' : 'hover:text-quantum-amber'}`}>Бесплатный курс</a>
         
         {isAuthenticated ? (
           <>

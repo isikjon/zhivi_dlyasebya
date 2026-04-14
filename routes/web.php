@@ -26,6 +26,29 @@ Route::get('/catalog', function () {
     ]);
 })->name('catalog');
 
+Route::get('/live-yourself', function () {
+    return Inertia::render('LiveYourself', [
+        'courses' => \App\Models\Course::where('is_active', true)->get(),
+    ]);
+})->name('live-yourself');
+
+Route::get('/archetypes', function () {
+    return Inertia::render('Archetypes', [
+        'courses' => \App\Models\Course::where('is_active', true)->get(),
+    ]);
+})->name('archetypes');
+
+Route::get('/program/{id}', function ($id) {
+    return Inertia::render('Program', [
+        'id' => $id,
+        'courses' => \App\Models\Course::where('is_active', true)->get(),
+    ]);
+})->name('program.show');
+
+Route::get('/thank-you', function () {
+    return Inertia::render('ThankYou');
+})->name('thank-you');
+
     // Личный кабинет ученика
     Route::middleware(['auth', 'verified'])->prefix('cabinet')->name('cabinet.')->group(function () {
         Route::get('/dashboard', [CourseController::class, 'index'])->name('index');
