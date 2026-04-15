@@ -26,7 +26,7 @@ class ProdamusService
     }
 
     /**
-     * URL запроса к Payform с do=link (в ответ приходит текстовая ссылка на страницу оплаты).
+     * URL страницы оплаты для редиректа пользователя напрямую.
      */
     public function createPaymentLink(User $user, Course $course, Payment $payment): string
     {
@@ -101,7 +101,6 @@ class ProdamusService
                     'quantity' => '1',
                 ],
             ],
-            'do' => 'link',
             'urlReturn' => route('payment.return', $payment->order_id),
             'urlSuccess' => route('payment.success', $payment->order_id),
             'urlNotification' => route('prodamus.webhook'),

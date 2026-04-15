@@ -73,11 +73,7 @@ class ConsultationController extends Controller
 
         $url = "{$apiBase}/bot{$token}/sendMessage";
 
-        $options = [
-            'curl' => [
-                CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
-            ],
-        ];
+        $options = [];
         if ($proxy) {
             $options['proxy'] = $proxy;
         }
