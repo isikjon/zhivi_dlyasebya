@@ -77,6 +77,12 @@ export default function AdminLayout({ header, children }) {
                                     Пользователи
                                 </NavLink>
                                 <NavLink
+                                    href={route('admin.payments.index')}
+                                    active={route().current('admin.payments.*')}
+                                >
+                                    Платежи
+                                </NavLink>
+                                <NavLink
                                     href={route('admin.content.index')}
                                     active={route().current('admin.content.*')}
                                 >
@@ -87,6 +93,12 @@ export default function AdminLayout({ header, children }) {
                                     active={route().current('admin.seo.*')}
                                 >
                                     SEO
+                                </NavLink>
+                                <NavLink
+                                    href={route('admin.settings.index')}
+                                    active={route().current('admin.settings.*')}
+                                >
+                                    Настройки
                                 </NavLink>
                             </div>
                         </div>

@@ -1,10 +1,24 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
-import { BookOpen, CheckCircle2, PlayCircle, Clock, Sparkles, ChevronRight, Image as ImageIcon } from 'lucide-react';
+import { BookOpen, CheckCircle2, PlayCircle, Clock, Sparkles, ChevronRight, CreditCard, Image as ImageIcon } from 'lucide-react';
+import { useState } from 'react';
 
 export default function Dashboard({ myCourses, availableCourses, seo }) {
-    const enroll = (courseId) => {
-        router.post(route('cabinet.course.enroll', courseId));
+    const [processingId, setProcessingId] = useState(null);
+
+    const handleCourseAction = (course) => {
+        if (processingId) return;
+        setProcessingId(course.id);
+
+        if (course.price == 0) {
+            router.post(route('cabinet.course.enroll', course.id), {}, {
+                onFinish: () => setProcessingId(null),
+            });
+        } else {
+            router.post(route('payment.initiate', course.id), {}, {
+                onFinish: () => setProcessingId(null),
+            });
+        }
     };
 
     return (
@@ -165,14 +179,31 @@ export default function Dashboard({ myCourses, availableCourses, seo }) {
                                             <p className="text-sm text-quantum-ivory/50 mt-2 line-clamp-2 leading-relaxed flex-grow">{course.description}</p>
                                             
                                             <button 
-                                                onClick={() => enroll(course.id)}
-                                                className={`mt-6 w-full py-4 rounded-2xl font-bold uppercase text-sm tracking-widest transition-all active:scale-[0.98] shadow-lg ${
+                                                onClick={() => handleCourseAction(course)}
+                                                disabled={processingId === course.id}
+                                                className={`mt-6 w-full py-4 rounded-2xl font-bold uppercase text-sm tracking-widest transition-all active:scale-[0.98] shadow-lg flex items-center justify-center gap-2 ${
+                                                    processingId === course.id ? 'opacity-60 cursor-wait' :
                                                     course.price == 0 
                                                     ? 'bg-quantum-amber text-quantum-emerald hover:bg-quantum-amber/90 shadow-quantum-amber/10' 
-                                                    : 'bg-white/5 border border-white/10 text-quantum-ivory hover:border-quantum-amber/30 hover:text-quantum-amber'
+                                                    : 'bg-gradient-to-r from-quantum-amber to-quantum-rose text-white hover:opacity-90 shadow-quantum-amber/20'
                                                 }`}
                                             >
-                                                {course.price == 0 ? 'Начать бесплатно' : 'Купить курс'}
+                                                {processingId === course.id ? (
+                                                    <>
+                                                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                                                        </svg>
+                                                        Обработка...
+                                                    </>
+                                                ) : course.price == 0 ? (
+                                                    'Начать бесплатно'
+                                                ) : (
+                                                    <>
+                                                        <CreditCard size={16} />
+                                                        Купить за {course.price} ₽
+                                                    </>
+                                                )}
                                             </button>
                                         </div>
                                     </div>

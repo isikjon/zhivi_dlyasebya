@@ -65,6 +65,13 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     Личный кабинет
                                 </NavLink>
+                                <NavLink
+                                    href={route('payment.history')}
+                                    active={route().current('payment.history')}
+                                    className="text-quantum-ivory/80 hover:text-quantum-amber"
+                                >
+                                    Мои платежи
+                                </NavLink>
                             </div>
                         </div>
 
@@ -171,6 +178,13 @@ export default function AuthenticatedLayout({ header, children }) {
                             className="text-quantum-ivory/80"
                         >
                             Личный кабинет
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('payment.history')}
+                            active={route().current('payment.history')}
+                            className="text-quantum-ivory/80"
+                        >
+                            Мои платежи
                         </ResponsiveNavLink>
                     </div>
 

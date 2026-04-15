@@ -63,6 +63,17 @@ Route::get('/thank-you', function () {
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     });
 
+    // Оплата через Prodamus
+    Route::middleware(['auth'])->group(function () {
+        Route::post('/payment/course/{course}', [\App\Http\Controllers\PaymentController::class, 'initiate'])->name('payment.initiate');
+        Route::get('/payment/success/{orderId}', [\App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
+        Route::get('/payment/return/{orderId}', [\App\Http\Controllers\PaymentController::class, 'returnPage'])->name('payment.return');
+        Route::get('/payment/history', [\App\Http\Controllers\PaymentController::class, 'history'])->name('payment.history');
+    });
+
+    // Webhook Prodamus (без CSRF, без auth)
+    Route::post('/webhook/prodamus', [\App\Http\Controllers\ProdamusWebhookController::class, 'handle'])->name('prodamus.webhook');
+
     // Новые пути для входа и регистрации в стиле фронта
     Route::middleware('guest')->group(function () {
         Route::get('login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'create'])->name('login');
@@ -92,6 +103,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/modules/{module}', [\App\Http\Controllers\Admin\ModuleController::class, 'update'])->name('modules.update');
     Route::delete('/modules/{module}', [\App\Http\Controllers\Admin\ModuleController::class, 'destroy'])->name('modules.destroy');
     
+    // Платежи
+    Route::get('/payments', [\App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('payments.index');
+
     // Пользователи
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::post('/users/{user}/toggle-block', [AdminUserController::class, 'toggleBlock'])->name('users.toggle-block');
@@ -108,6 +122,10 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/seo/global', [\App\Http\Controllers\Admin\SeoController::class, 'updateGlobal'])->name('seo.update_global');
     Route::post('/seo/sitemap', [\App\Http\Controllers\Admin\SeoController::class, 'generateSitemap'])->name('seo.generate_sitemap');
     
+    // Настройки
+    Route::get('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings.index');
+    Route::post('/settings/prodamus', [\App\Http\Controllers\Admin\SettingsController::class, 'updateProdamus'])->name('settings.prodamus');
+
     // Уроки
     Route::post('/modules/{module}/lessons', [AdminLessonController::class, 'store'])->name('lessons.store');
     Route::post('/lessons/{lesson}', [AdminLessonController::class, 'update'])->name('lessons.update');

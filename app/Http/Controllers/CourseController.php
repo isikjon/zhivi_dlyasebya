@@ -133,8 +133,7 @@ class CourseController extends Controller
             return redirect()->route('cabinet.course.show', $course->id)->with('message', 'Курс успешно добавлен в ваш кабинет');
         }
 
-        // Для платных курсов пока просто редирект на оплату (заглушка)
-        return back()->with('error', 'Оплата временно недоступна. Пожалуйста, свяжитесь с администратором.');
+        return redirect()->route('payment.initiate', $course->id);
     }
 
     public function completeLesson(\App\Models\Lesson $lesson)

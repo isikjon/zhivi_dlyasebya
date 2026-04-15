@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'prodamus' => [
+        'url' => env('PRODAMUS_URL', 'https://yourshop.prodamus.link'),
+        'secret_key' => env('PRODAMUS_SECRET_KEY', ''),
+    ],
+
 ];
