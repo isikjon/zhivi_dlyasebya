@@ -3,13 +3,11 @@ import { Outlet } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { Menu, X, User, Phone, Mail, Send, LogIn, LogOut } from 'lucide-react';
 import { TestimonialsSection } from './TestimonialsSection';
-import { AuthModal } from './AuthModal';
 import { useAuth } from '../context/AuthContext';
 import { usePage } from '@inertiajs/react';
 
 export default function Layout() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { isAuthenticated, logout, user } = useAuth();
   
   // Safely access siteContent from Inertia if available
@@ -29,16 +27,11 @@ export default function Layout() {
   const contacts = siteContent?.SocialNetworks || {};
 
   useEffect(() => {
-    const handleOpenAuth = () => setIsAuthModalOpen(true);
-    window.addEventListener('openAuthModal', handleOpenAuth);
-    
-    // Listen for Inertia navigation events to update active state
     const handleNavigation = () => setCurrentPath(window.location.pathname);
     window.addEventListener('popstate', handleNavigation);
     document.addEventListener('inertia:finish', handleNavigation);
 
     return () => {
-      window.removeEventListener('openAuthModal', handleOpenAuth);
       window.removeEventListener('popstate', handleNavigation);
       document.removeEventListener('inertia:finish', handleNavigation);
     };
@@ -92,13 +85,13 @@ export default function Layout() {
                     </button>
                   </div>
                 ) : (
-                  <button 
-                    onClick={() => setIsAuthModalOpen(true)}
+                  <a 
+                    href="/login"
                     className="flex items-center space-x-2 text-quantum-amber hover:text-quantum-amber/80 transition-colors text-sm uppercase tracking-widest font-medium"
                   >
                     <LogIn size={18} />
                     <span>Войти</span>
-                  </button>
+                  </a>
                 )}
               </div>
             </nav>
@@ -144,20 +137,16 @@ export default function Layout() {
             </button>
           </>
         ) : (
-          <button 
-            onClick={() => {
-              setIsMenuOpen(false);
-              setIsAuthModalOpen(true);
-            }}
+          <a 
+            href="/login"
+            onClick={() => setIsMenuOpen(false)}
             className="font-display text-3xl text-quantum-amber flex items-center space-x-3"
           >
             <LogIn size={18} />
             <span>Войти</span>
-          </button>
+          </a>
         )}
       </motion.div>
-
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
 
       {/* Main Content */}
       <main className="flex-grow pt-20 relative z-10 flex flex-col">

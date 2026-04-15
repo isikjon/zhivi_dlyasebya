@@ -49,9 +49,11 @@ export default function Cabinet() {
           <p className="text-quantum-ivory/60 mb-8">
             Пожалуйста, войдите в свой аккаунт, чтобы получить доступ к вашим программам и прогрессу.
           </p>
-          <Button onClick={() => window.dispatchEvent(new CustomEvent('openAuthModal'))} size="lg" className="w-full">
-            Войти в кабинет
-          </Button>
+          <Link to="/login" className="w-full">
+            <Button size="lg" className="w-full">
+              Войти в кабинет
+            </Button>
+          </Link>
         </motion.div>
       </div>
     );

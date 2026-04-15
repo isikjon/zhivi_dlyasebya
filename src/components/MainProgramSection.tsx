@@ -77,7 +77,7 @@ export function MainProgramSection() {
         navigate('/cabinet/dashboard');
       }
     } else {
-      window.dispatchEvent(new CustomEvent('openAuthModal'));
+      window.location.href = '/login';
     }
   };
 
