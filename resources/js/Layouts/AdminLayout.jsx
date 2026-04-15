@@ -94,12 +94,6 @@ export default function AdminLayout({ header, children }) {
                                 >
                                     SEO
                                 </NavLink>
-                                <NavLink
-                                    href={route('admin.settings.index')}
-                                    active={route().current('admin.settings.*')}
-                                >
-                                    Настройки
-                                </NavLink>
                             </div>
                         </div>
 

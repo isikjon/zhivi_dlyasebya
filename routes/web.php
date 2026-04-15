@@ -122,10 +122,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/seo/global', [\App\Http\Controllers\Admin\SeoController::class, 'updateGlobal'])->name('seo.update_global');
     Route::post('/seo/sitemap', [\App\Http\Controllers\Admin\SeoController::class, 'generateSitemap'])->name('seo.generate_sitemap');
     
-    // Настройки
-    Route::get('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('settings.index');
-    Route::post('/settings/prodamus', [\App\Http\Controllers\Admin\SettingsController::class, 'updateProdamus'])->name('settings.prodamus');
-
     // Уроки
     Route::post('/modules/{module}/lessons', [AdminLessonController::class, 'store'])->name('lessons.store');
     Route::post('/lessons/{lesson}', [AdminLessonController::class, 'update'])->name('lessons.update');
