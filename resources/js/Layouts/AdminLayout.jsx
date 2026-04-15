@@ -61,35 +61,30 @@ export default function AdminLayout({ header, children }) {
                                 <NavLink
                                     href={route('admin.dashboard')}
                                     active={route().current('admin.dashboard')}
-                                    className="text-gray-800 hover:text-black font-semibold"
                                 >
                                     Дашборд
                                 </NavLink>
                                 <NavLink
                                     href={route('admin.courses.index')}
                                     active={route().current('admin.courses.*')}
-                                    className="text-gray-800 hover:text-black font-semibold"
                                 >
                                     Курсы
                                 </NavLink>
                                 <NavLink
                                     href={route('admin.users.index')}
                                     active={route().current('admin.users.*')}
-                                    className="text-gray-800 hover:text-black font-semibold"
                                 >
                                     Пользователи
                                 </NavLink>
                                 <NavLink
                                     href={route('admin.content.index')}
                                     active={route().current('admin.content.*')}
-                                    className="text-gray-800 hover:text-black font-semibold"
                                 >
                                     Контент
                                 </NavLink>
                                 <NavLink
                                     href={route('admin.seo.index')}
                                     active={route().current('admin.seo.*')}
-                                    className="text-gray-800 hover:text-black font-semibold"
                                 >
                                     SEO
                                 </NavLink>
