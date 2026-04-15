@@ -52,12 +52,13 @@ class PaymentController extends Controller
             ->first();
 
         if ($pendingPayment) {
-            $paymentUrl = $this->prodamus->createPaymentLink($user, $course, $pendingPayment);
+            $paymentUrl = $this->prodamus->resolveCheckoutUrl($user, $course, $pendingPayment);
+
             return Inertia::location($paymentUrl);
         }
 
         $payment = $this->prodamus->createOrder($user, $course);
-        $paymentUrl = $this->prodamus->createPaymentLink($user, $course, $payment);
+        $paymentUrl = $this->prodamus->resolveCheckoutUrl($user, $course, $payment);
 
         return Inertia::location($paymentUrl);
     }
