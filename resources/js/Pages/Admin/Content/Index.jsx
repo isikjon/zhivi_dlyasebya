@@ -75,20 +75,20 @@ export default function Index({ contents }) {
                 )}
             </div>
 
-            {editingId === item.id ? (
+                    {editingId === item.id ? (
                 <div className="mt-2">
                     {item.type === 'html' || item.value?.length > 100 ? (
                         <textarea
                             value={data.value}
                             onChange={(e) => setData('value', e.target.value)}
-                            className="w-full bg-white border-gray-300 rounded-lg text-gray-900 focus:ring-quantum-amber focus:border-quantum-amber min-h-[100px] font-mono text-sm"
+                            className="w-full bg-white border border-black rounded-lg text-gray-900 focus:ring-quantum-amber focus:border-quantum-amber min-h-[100px] font-mono text-sm"
                         />
                     ) : (
                         <input
                             type="text"
                             value={data.value}
                             onChange={(e) => setData('value', e.target.value)}
-                            className="w-full bg-white border-gray-300 rounded-lg text-gray-900 focus:ring-quantum-amber focus:border-quantum-amber"
+                            className="w-full bg-white border border-black rounded-lg text-gray-900 focus:ring-quantum-amber focus:border-quantum-amber"
                         />
                     )}
                 </div>

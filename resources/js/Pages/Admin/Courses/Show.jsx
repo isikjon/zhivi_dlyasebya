@@ -185,11 +185,11 @@ export default function Show({ course }) {
                     <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
                         <h3 className="text-lg font-bold text-quantum-amber mb-6 uppercase tracking-wider">Добавить новый модуль</h3>
                         <form onSubmit={submitModule} className="flex gap-4">
-                            <input
-                                type="text" placeholder="Название модуля"
-                                className="flex-1 bg-white border-gray-300 rounded-xl px-5 py-3 text-gray-900 focus:ring-quantum-amber"
-                                value={moduleForm.data.title} onChange={e => moduleForm.setData('title', e.target.value)} required
-                            />
+                                <input
+                                    type="text" placeholder="Название модуля"
+                                    className="flex-1 bg-white border border-black rounded-xl px-5 py-3 text-gray-900 focus:ring-quantum-amber placeholder:text-gray-400"
+                                    value={moduleForm.data.title} onChange={e => moduleForm.setData('title', e.target.value)} required
+                                />
                             <button type="submit" disabled={moduleForm.processing} className="bg-quantum-amber text-quantum-emerald px-8 py-3 rounded-xl font-bold uppercase text-xs hover:bg-quantum-amber/90 transition-all flex items-center gap-2">
                                 {moduleForm.processing ? <Loader2 size={16} className="animate-spin" /> : <Plus size={16} />}
                                 <span>Создать</span>
@@ -208,7 +208,7 @@ export default function Show({ course }) {
                                         <div className="w-10 h-10 rounded-xl bg-quantum-amber/10 text-quantum-amber flex items-center justify-center font-bold shrink-0">{module.order}</div>
                                         {editingModuleId === module.id ? (
                                             <form onSubmit={(e) => { e.stopPropagation(); submitEditModule(e, module.id); }} className="flex items-center gap-3 flex-1" onClick={e => e.stopPropagation()}>
-                                                <input type="text" className="flex-1 bg-white border-gray-300 rounded-xl px-4 py-2 text-sm text-gray-900 focus:ring-quantum-amber" value={editModuleForm.data.title} onChange={e => editModuleForm.setData('title', e.target.value)} autoFocus />
+                                                <input type="text" className="flex-1 bg-white border border-black rounded-xl px-4 py-2 text-sm text-gray-900 focus:ring-quantum-amber placeholder:text-gray-400" value={editModuleForm.data.title} onChange={e => editModuleForm.setData('title', e.target.value)} autoFocus />
                                                 <button type="submit" className="text-green-600 hover:text-green-500 p-1"><CheckIcon size={20} /></button>
                                                 <button type="button" onClick={() => setEditingModuleId(null)} className="text-red-600 hover:text-red-500 p-1"><X size={20} /></button>
                                             </form>

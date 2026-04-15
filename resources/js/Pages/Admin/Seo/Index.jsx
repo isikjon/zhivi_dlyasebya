@@ -53,10 +53,10 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-3xl border border-gray-200">
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-3xl border border-black">
                         
                         {/* Табы */}
-                        <div className="flex border-b border-gray-200">
+                        <div className="flex border-b border-black">
                             <button
                                 onClick={() => setActiveTab('pages')}
                                 className={`px-8 py-4 text-sm font-bold uppercase tracking-widest transition-colors flex items-center gap-2 ${
@@ -101,7 +101,7 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                                             <label className="block text-xs font-bold uppercase tracking-widest text-gray-600">Мастер-фавикон (512x512px)</label>
                                             <div className="flex items-center gap-4">
                                                 {favicon && (
-                                                    <div className="w-12 h-12 bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center overflow-hidden">
+                                                    <div className="w-12 h-12 bg-gray-50 rounded-lg border border-black flex items-center justify-center overflow-hidden">
                                                         <img src={`/${favicon}`} alt="Favicon" className="w-8 h-8 object-contain" />
                                                     </div>
                                                 )}
@@ -127,7 +127,7 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                                             value={globalForm.data.head_scripts}
                                             onChange={e => globalForm.setData('head_scripts', e.target.value)}
                                             rows="6"
-                                            className="w-full bg-white border-gray-200 rounded-2xl text-sm font-mono text-gray-700 focus:ring-quantum-amber focus:border-quantum-amber"
+                                            className="w-full bg-white border border-black rounded-2xl text-sm font-mono text-gray-700 focus:ring-quantum-amber focus:border-quantum-amber placeholder:text-gray-400"
                                             placeholder="<!-- Google Tag Manager --> ..."
                                         ></textarea>
                                     </div>
@@ -140,7 +140,7 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                                             value={globalForm.data.body_scripts}
                                             onChange={e => globalForm.setData('body_scripts', e.target.value)}
                                             rows="4"
-                                            className="w-full bg-white border-gray-200 rounded-2xl text-sm font-mono text-gray-700 focus:ring-quantum-amber focus:border-quantum-amber"
+                                            className="w-full bg-white border border-black rounded-2xl text-sm font-mono text-gray-700 focus:ring-quantum-amber focus:border-quantum-amber placeholder:text-gray-400"
                                         ></textarea>
                                     </div>
 
@@ -168,7 +168,7 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                                             value={globalForm.data.robots_txt}
                                             onChange={e => globalForm.setData('robots_txt', e.target.value)}
                                             rows="10"
-                                            className="w-full bg-white border-gray-200 rounded-2xl text-sm font-mono text-gray-700 focus:ring-quantum-amber focus:border-quantum-amber"
+                                            className="w-full bg-white border border-black rounded-2xl text-sm font-mono text-gray-700 focus:ring-quantum-amber focus:border-quantum-amber placeholder:text-gray-400"
                                         ></textarea>
                                         <div className="flex justify-end">
                                             <button 
@@ -181,7 +181,7 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                                         </div>
                                     </form>
 
-                                    <div className="p-8 bg-gray-50 border border-gray-200 rounded-3xl space-y-6">
+                                    <div className="p-8 bg-gray-50 border border-black rounded-3xl space-y-6">
                                         <div className="flex items-center justify-between">
                                             <div>
                                                 <h4 className="text-lg font-bold text-gray-900 flex items-center gap-2">
@@ -239,7 +239,7 @@ function PageSeoForm({ page, initialData }) {
     };
 
     return (
-        <div className="bg-white border border-gray-200 rounded-3xl overflow-hidden shadow-sm">
+        <div className="bg-white border border-black rounded-3xl overflow-hidden shadow-sm">
             <div className="px-6 py-4 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
                 <h3 className="font-bold text-gray-900 flex items-center gap-2 capitalize">
                     <div className="w-2 h-2 rounded-full bg-quantum-amber"></div>
@@ -257,13 +257,13 @@ function PageSeoForm({ page, initialData }) {
                     <div className="space-y-4">
                         <div className="space-y-2">
                             <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">Meta Title</label>
-                            <input 
-                                type="text" 
-                                value={data.title}
-                                onChange={e => setData('title', e.target.value)}
-                                className="w-full bg-white border-gray-200 rounded-xl text-sm text-gray-900 focus:ring-quantum-amber p-4"
-                                placeholder="Заголовок страницы в браузере"
-                            />
+                                <input 
+                                    type="text" 
+                                    value={data.title}
+                                    onChange={e => setData('title', e.target.value)}
+                                    className="w-full bg-white border border-black rounded-xl text-sm text-gray-900 focus:ring-quantum-amber p-4 placeholder:text-gray-400"
+                                    placeholder="Заголовок страницы в браузере"
+                                />
                             <p className="text-[10px] text-gray-600 mt-1 ml-1">Рекомендуется от 50 до 60 символов.</p>
                         </div>
                         <div className="space-y-2">
@@ -272,7 +272,7 @@ function PageSeoForm({ page, initialData }) {
                                 value={data.description}
                                 onChange={e => setData('description', e.target.value)}
                                 rows="3"
-                                className="w-full bg-white border-gray-200 rounded-xl text-sm text-gray-900 focus:ring-quantum-amber p-4"
+                                className="w-full bg-white border border-black rounded-xl text-sm text-gray-900 focus:ring-quantum-amber p-4 placeholder:text-gray-400"
                                 placeholder="Краткое описание для поисковиков"
                             ></textarea>
                             <p className="text-[10px] text-gray-600 mt-1 ml-1">Рекомендуется от 140 до 160 символов.</p>
@@ -283,7 +283,7 @@ function PageSeoForm({ page, initialData }) {
                                 type="text" 
                                 value={data.keywords}
                                 onChange={e => setData('keywords', e.target.value)}
-                                className="w-full bg-white border-gray-200 rounded-xl text-sm text-gray-900 focus:ring-quantum-amber p-4"
+                                className="w-full bg-white border border-black rounded-xl text-sm text-gray-900 focus:ring-quantum-amber p-4 placeholder:text-gray-400"
                                 placeholder="ключевые, слова, через, запятую"
                             />
                         </div>
@@ -301,14 +301,14 @@ function PageSeoForm({ page, initialData }) {
                                 type="text" 
                                 value={data.og_title}
                                 onChange={e => setData('og_title', e.target.value)}
-                                className="w-full bg-white border-gray-200 rounded-xl text-sm text-gray-900 focus:ring-quantum-amber p-4"
+                                className="w-full bg-white border border-black rounded-xl text-sm text-gray-900 focus:ring-quantum-amber p-4"
                             />
                         </div>
                         <div className="space-y-2">
                             <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">OG Image</label>
                             <div className="flex items-center gap-4">
                                 {initialData?.og_image && (
-                                    <div className="w-16 h-10 bg-white rounded border border-gray-200 overflow-hidden">
+                                    <div className="w-16 h-10 bg-white rounded border border-black overflow-hidden">
                                         <img src={`/storage/${initialData.og_image}`} className="w-full h-full object-cover" />
                                     </div>
                                 )}
@@ -328,7 +328,7 @@ function PageSeoForm({ page, initialData }) {
                         value={data.additional_tags}
                         onChange={e => setData('additional_tags', e.target.value)}
                         rows="3"
-                        className="w-full bg-white border-gray-200 rounded-xl text-sm text-gray-700 font-mono focus:ring-quantum-amber p-4"
+                        className="w-full bg-white border border-black rounded-xl text-sm text-gray-700 font-mono focus:ring-quantum-amber p-4 placeholder:text-gray-400"
                         placeholder="<meta name='robots' content='noindex'> ..."
                     ></textarea>
                 </div>

@@ -44,7 +44,7 @@ export default function Edit({ course }) {
                                 <TextInput
                                     id="title"
                                     type="text"
-                                    className="mt-1 block w-full"
+                                    className="mt-1 block w-full border-black"
                                     value={data.title}
                                     onChange={e => setData('title', e.target.value)}
                                 />
@@ -55,7 +55,7 @@ export default function Edit({ course }) {
                                 <InputLabel htmlFor="description" value="Описание" />
                                 <textarea
                                     id="description"
-                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                    className="mt-1 block w-full border-black rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                     value={data.description}
                                     onChange={e => setData('description', e.target.value)}
                                 />
@@ -67,7 +67,7 @@ export default function Edit({ course }) {
                                 <TextInput
                                     id="price"
                                     type="number"
-                                    className="mt-1 block w-full"
+                                    className="mt-1 block w-full border-black"
                                     value={data.price}
                                     onChange={e => setData('price', e.target.value)}
                                 />

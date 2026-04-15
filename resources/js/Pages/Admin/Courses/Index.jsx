@@ -170,7 +170,7 @@ export default function Index({ courses }) {
                                 <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">Название курса</label>
                                 <input 
                                     type="text" 
-                                    className="w-full bg-white border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 focus:ring-quantum-amber"
+                                    className="w-full bg-white border border-black rounded-xl px-4 py-3 text-sm text-gray-900 focus:ring-quantum-amber placeholder:text-gray-400"
                                     value={editForm.data.title}
                                     onChange={e => editForm.setData('title', e.target.value)}
                                     required
@@ -180,7 +180,7 @@ export default function Index({ courses }) {
                             <div className="space-y-2">
                                 <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">Описание</label>
                                 <textarea 
-                                    className="w-full bg-white border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 focus:ring-quantum-amber min-h-[100px]"
+                                    className="w-full bg-white border border-black rounded-xl px-4 py-3 text-sm text-gray-900 focus:ring-quantum-amber min-h-[100px] placeholder:text-gray-400"
                                     value={editForm.data.description}
                                     onChange={e => editForm.setData('description', e.target.value)}
                                 />
@@ -192,7 +192,7 @@ export default function Index({ courses }) {
                                     <div className="flex gap-2">
                                         <input 
                                             type="number" 
-                                            className="flex-1 bg-white border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 focus:ring-quantum-amber"
+                                            className="flex-1 bg-white border border-black rounded-xl px-4 py-3 text-sm text-gray-900 focus:ring-quantum-amber placeholder:text-gray-400"
                                             value={editForm.data.price}
                                             onChange={e => editForm.setData('price', e.target.value)}
                                             required
