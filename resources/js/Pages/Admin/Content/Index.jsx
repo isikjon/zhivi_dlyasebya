@@ -41,9 +41,9 @@ export default function Index({ contents }) {
     }, {});
 
     const renderItem = (item) => (
-        <div key={item.id} className="group relative border-b border-gray-700/50 pb-6 last:border-0 last:pb-0">
+        <div key={item.id} className="group relative border-b border-gray-200 pb-6 last:border-0 last:pb-0">
             <div className="flex justify-between items-start mb-2">
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-tighter">
+                <label className="text-xs font-bold text-gray-400 uppercase tracking-tighter">
                     {item.key}
                 </label>
                 {editingId !== item.id ? (
@@ -59,14 +59,14 @@ export default function Index({ contents }) {
                         <button
                             onClick={saveContent}
                             disabled={processing}
-                            className="flex items-center space-x-1 text-xs text-green-400 hover:text-green-300 transition-colors"
+                            className="flex items-center space-x-1 text-xs text-green-600 hover:text-green-500 transition-colors"
                         >
                             <Check size={14} />
                             <span>Сохранить</span>
                         </button>
                         <button
                             onClick={cancelEditing}
-                            className="flex items-center space-x-1 text-xs text-red-400 hover:text-red-300 transition-colors"
+                            className="flex items-center space-x-1 text-xs text-red-600 hover:text-red-500 transition-colors"
                         >
                             <X size={14} />
                             <span>Отмена</span>
@@ -81,20 +81,20 @@ export default function Index({ contents }) {
                         <textarea
                             value={data.value}
                             onChange={(e) => setData('value', e.target.value)}
-                            className="w-full bg-gray-900 border-gray-700 rounded-lg text-gray-200 focus:ring-quantum-amber focus:border-quantum-amber min-h-[100px] font-mono text-sm"
+                            className="w-full bg-white border-gray-300 rounded-lg text-gray-900 focus:ring-quantum-amber focus:border-quantum-amber min-h-[100px] font-mono text-sm"
                         />
                     ) : (
                         <input
                             type="text"
                             value={data.value}
                             onChange={(e) => setData('value', e.target.value)}
-                            className="w-full bg-gray-900 border-gray-700 rounded-lg text-gray-200 focus:ring-quantum-amber focus:border-quantum-amber"
+                            className="w-full bg-white border-gray-300 rounded-lg text-gray-900 focus:ring-quantum-amber focus:border-quantum-amber"
                         />
                     )}
                 </div>
             ) : (
-                <div className="text-gray-300 text-sm leading-relaxed whitespace-pre-wrap">
-                    {item.value || <span className="text-gray-600 italic">Пусто</span>}
+                <div className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
+                    {item.value || <span className="text-gray-400 italic">Пусто</span>}
                 </div>
             )}
         </div>
@@ -103,7 +103,7 @@ export default function Index({ contents }) {
     return (
         <AdminLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-200">
+                <h2 className="text-xl font-semibold leading-tight text-gray-800">
                     Управление сайтом
                 </h2>
             }
@@ -116,17 +116,17 @@ export default function Index({ contents }) {
                         
                         {/* Левая колонка: Соцсети и контакты */}
                         <div className="lg:col-span-1 space-y-8">
-                            <div className="overflow-hidden bg-gray-800 shadow-sm sm:rounded-[32px] border border-gray-700">
-                                <div className="border-b border-gray-700 bg-gray-900/50 px-8 py-6 flex items-center gap-3">
+                            <div className="overflow-hidden bg-white shadow-sm sm:rounded-[32px] border border-gray-200">
+                                <div className="border-b border-gray-100 bg-gray-50/50 px-8 py-6 flex items-center gap-3">
                                     <Share2 className="text-quantum-amber" size={20} />
-                                    <h3 className="text-lg font-bold text-white uppercase tracking-wider">
+                                    <h3 className="text-lg font-bold text-gray-900 uppercase tracking-wider">
                                         Соцсети и Контакты
                                     </h3>
                                 </div>
                                 <div className="p-8 space-y-8">
                                     {groupedContents['SocialNetworks']?.map(item => renderItem(item))}
                                     {!groupedContents['SocialNetworks'] && (
-                                        <p className="text-gray-500 italic text-sm text-center py-4">Данные не найдены</p>
+                                        <p className="text-gray-400 italic text-sm text-center py-4">Данные не найдены</p>
                                     )}
                                 </div>
                             </div>
@@ -137,10 +137,10 @@ export default function Index({ contents }) {
                             {Object.entries(groupedContents)
                                 .filter(([section]) => section !== 'SocialNetworks')
                                 .map(([section, items]) => (
-                                <div key={section} className="overflow-hidden bg-gray-800 shadow-sm sm:rounded-[32px] border border-gray-700">
-                                    <div className="border-b border-gray-700 bg-gray-900/50 px-8 py-6 flex items-center gap-3">
+                                <div key={section} className="overflow-hidden bg-white shadow-sm sm:rounded-[32px] border border-gray-200">
+                                    <div className="border-b border-gray-100 bg-gray-50/50 px-8 py-6 flex items-center gap-3">
                                         <LayoutIcon className="text-quantum-amber" size={20} />
-                                        <h3 className="text-lg font-bold text-white uppercase tracking-wider">
+                                        <h3 className="text-lg font-bold text-gray-900 uppercase tracking-wider">
                                             Секция: {section}
                                         </h3>
                                     </div>

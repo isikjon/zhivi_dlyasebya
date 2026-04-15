@@ -24,7 +24,7 @@ export default function Create() {
     return (
         <AdminLayout
             header={
-                <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                <h2 className="text-xl font-semibold leading-tight text-gray-800">
                     Добавить новый курс
                 </h2>
             }
@@ -33,7 +33,7 @@ export default function Create() {
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-6">
+                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 border border-gray-200">
                         <form onSubmit={submit} className="max-w-xl">
                             <div className="mb-4">
                                 <InputLabel htmlFor="title" value="Название курса" />
@@ -51,7 +51,7 @@ export default function Create() {
                                 <InputLabel htmlFor="description" value="Описание" />
                                 <textarea
                                     id="description"
-                                    className="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                                     value={data.description}
                                     onChange={e => setData('description', e.target.value)}
                                 />
@@ -77,9 +77,9 @@ export default function Create() {
                                         name="is_main"
                                         checked={data.is_main}
                                         onChange={e => setData('is_main', e.target.checked)}
-                                        className="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                        className="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
                                     />
-                                    <span className="ms-2 text-sm text-gray-600 dark:text-gray-400 font-bold text-quantum-amber uppercase tracking-widest">Основной курс (для главной страницы)</span>
+                                    <span className="ms-2 text-sm text-gray-600 font-bold text-quantum-amber uppercase tracking-widest">Основной курс (для главной страницы)</span>
                                 </label>
                                 <p className="text-[10px] text-gray-500 mt-1">Если выбрано, этот курс будет отображаться в блоке «Готова вернуться к себе?» на главной странице.</p>
                             </div>
@@ -89,7 +89,7 @@ export default function Create() {
                                 <input
                                     id="image"
                                     type="file"
-                                    className="mt-1 block w-full text-sm text-gray-500 dark:text-gray-400"
+                                    className="mt-1 block w-full text-sm text-gray-500"
                                     onChange={e => setData('image', e.target.files[0])}
                                 />
                                 <InputError className="mt-2" message={errors.image} />
