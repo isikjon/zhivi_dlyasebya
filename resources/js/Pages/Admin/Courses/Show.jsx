@@ -133,15 +133,15 @@ export default function Show({ course }) {
 
     const FileUploadButton = ({ icon: Icon, label, files, onSelect, inputRef, accept, colorClass, multiple = false, type }) => (
         <div className="space-y-2">
-            <label className="text-[10px] uppercase font-bold text-gray-400 ml-1">{label}</label>
+            <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">{label}</label>
             <div 
                 onClick={() => inputRef.current?.click()}
                 className={`relative group cursor-pointer border-2 border-dashed rounded-2xl p-4 transition-all duration-300 flex flex-col items-center justify-center gap-2 bg-gray-50 border-gray-200 hover:border-quantum-amber/50 hover:bg-quantum-amber/5`}
             >
-                <div className="w-10 h-10 rounded-full bg-white text-gray-400 group-hover:text-quantum-amber group-hover:bg-quantum-amber/10 transition-all flex items-center justify-center border border-gray-100">
+                <div className="w-10 h-10 rounded-full bg-white text-gray-600 group-hover:text-quantum-amber group-hover:bg-quantum-amber/10 transition-all flex items-center justify-center border border-gray-100">
                     <Icon size={20} />
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-quantum-amber transition-colors">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-600 group-hover:text-quantum-amber transition-colors">
                     {multiple ? 'Добавить файлы' : 'Выбрать файл'}
                 </span>
                 <input 
@@ -175,7 +175,7 @@ export default function Show({ course }) {
             header={
                 <div className="flex justify-between items-center">
                     <h2 className="text-xl font-semibold leading-tight text-gray-800">Курс: {course.title}</h2>
-                    <div className="text-sm text-gray-500">{course.modules.length} модулей</div>
+                    <div className="text-sm text-gray-700">{course.modules.length} модулей</div>
                 </div>
             }
         >
@@ -215,9 +215,9 @@ export default function Show({ course }) {
                                         ) : <h3 className="text-lg font-bold text-gray-900">{module.title}</h3>}
                                     </div>
                                     <div className="flex items-center gap-3">
-                                        <button onClick={(e) => { e.stopPropagation(); startEditingModule(module); }} className="p-2 text-gray-400 hover:text-quantum-amber transition-colors"><Edit2 size={20} /></button>
-                                        <button onClick={(e) => { e.stopPropagation(); deleteModule(module.id); }} className="p-2 text-gray-400 hover:text-red-500 transition-colors"><Trash2 size={20} /></button>
-                                        <div className="p-2 text-gray-400">
+                                        <button onClick={(e) => { e.stopPropagation(); startEditingModule(module); }} className="p-2 text-gray-600 hover:text-quantum-amber transition-colors"><Edit2 size={20} /></button>
+                                        <button onClick={(e) => { e.stopPropagation(); deleteModule(module.id); }} className="p-2 text-gray-600 hover:text-red-500 transition-colors"><Trash2 size={20} /></button>
+                                        <div className="p-2 text-gray-600">
                                             {expandedModules[module.id] ? <ChevronUp size={22} /> : <ChevronDown size={22} />}
                                         </div>
                                     </div>
@@ -241,7 +241,7 @@ export default function Show({ course }) {
                                                                 {module.lessons.length > 0 ? `Контент урока: ${module.title}` : `Новый урок для: ${module.title}`}
                                                             </h4>
                                                             {activeModuleId === module.id && module.lessons.length === 0 && (
-                                                                <button onClick={cancelEditingLesson} className="text-gray-400 hover:text-gray-600 flex items-center gap-1 text-xs uppercase font-bold tracking-tighter">
+                                                                <button onClick={cancelEditingLesson} className="text-gray-600 hover:text-gray-600 flex items-center gap-1 text-xs uppercase font-bold tracking-tighter">
                                                                     <X size={14} /> Отмена
                                                                 </button>
                                                             )}
@@ -300,8 +300,8 @@ export default function Show({ course }) {
                                                                                             <span className="text-[11px] text-gray-700 truncate">{asset.name}</span>
                                                                                         </div>
                                                                                         <div className="flex items-center gap-1 shrink-0 ml-2">
-                                                                                            <button type="button" onClick={() => setPreviewAsset(asset)} className="p-1.5 text-gray-400 hover:text-blue-600 transition-colors">👁️</button>
-                                                                                            <button type="button" onClick={() => removeExistingAsset(asset.id)} className="p-1.5 text-gray-400 hover:text-red-600 transition-colors">❌</button>
+                                                                                            <button type="button" onClick={() => setPreviewAsset(asset)} className="p-1.5 text-gray-600 hover:text-blue-600 transition-colors">👁️</button>
+                                                                                            <button type="button" onClick={() => removeExistingAsset(asset.id)} className="p-1.5 text-gray-600 hover:text-red-600 transition-colors">❌</button>
                                                                                         </div>
                                                                                     </div>
                                                                                 ))}
@@ -321,8 +321,8 @@ export default function Show({ course }) {
                                                                                             <span className="text-[11px] text-gray-700 truncate">{asset.name}</span>
                                                                                         </div>
                                                                                         <div className="flex items-center gap-1 shrink-0 ml-2">
-                                                                                            <button type="button" onClick={() => setPreviewAsset(asset)} className="p-1.5 text-gray-400 hover:text-blue-600 transition-colors">👁️</button>
-                                                                                            <button type="button" onClick={() => removeExistingAsset(asset.id)} className="p-1.5 text-gray-400 hover:text-red-600 transition-colors">❌</button>
+                                                                                            <button type="button" onClick={() => setPreviewAsset(asset)} className="p-1.5 text-gray-600 hover:text-blue-600 transition-colors">👁️</button>
+                                                                                            <button type="button" onClick={() => removeExistingAsset(asset.id)} className="p-1.5 text-gray-600 hover:text-red-600 transition-colors">❌</button>
                                                                                         </div>
                                                                                     </div>
                                                                                 ))}
@@ -332,7 +332,7 @@ export default function Show({ course }) {
                                                                 </div>
                                                             </div>
                                                             <div className="md:col-span-2 space-y-2">
-                                                                <label className="text-[10px] uppercase font-bold text-gray-400 ml-1">Текстовое описание</label>
+                                                                <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">Текстовое описание</label>
                                                                 <RichTextEditor 
                                                                     value={lessonForm.data.content || module.lessons[0]?.content || ''} 
                                                                     onChange={(html) => lessonForm.setData('content', html)} 
@@ -343,7 +343,7 @@ export default function Show({ course }) {
                                                                     <button 
                                                                         type="button" 
                                                                         onClick={() => deleteLesson(module.lessons[0].id)}
-                                                                        className="mr-auto text-gray-400 hover:text-red-600 transition-colors p-2"
+                                                                        className="mr-auto text-gray-600 hover:text-red-600 transition-colors p-2"
                                                                         title="Удалить урок целиком"
                                                                     >
                                                                         <Trash2 size={20} />
@@ -362,7 +362,7 @@ export default function Show({ course }) {
                                                     <div className="pt-4">
                                                         <button 
                                                             onClick={() => { setEditingLesson(null); setActiveModuleId(module.id); }}
-                                                            className="w-full py-4 border-2 border-dashed border-gray-200 rounded-2xl text-gray-400 hover:border-quantum-amber hover:text-quantum-amber transition-all flex items-center justify-center gap-2 font-bold uppercase text-xs tracking-widest"
+                                                            className="w-full py-4 border-2 border-dashed border-gray-200 rounded-2xl text-gray-600 hover:border-quantum-amber hover:text-quantum-amber transition-all flex items-center justify-center gap-2 font-bold uppercase text-xs tracking-widest"
                                                         >
                                                             <Plus size={18} />
                                                             Добавить урок
@@ -392,7 +392,7 @@ export default function Show({ course }) {
                             </div>
                             <button 
                                 onClick={() => setPreviewAsset(null)}
-                                className="p-2 rounded-full bg-gray-100 text-gray-400 hover:text-gray-900 hover:bg-gray-200 transition-all"
+                                className="p-2 rounded-full bg-gray-100 text-gray-600 hover:text-gray-900 hover:bg-gray-200 transition-all"
                             >
                                 <X size={24} />
                             </button>
@@ -422,7 +422,7 @@ export default function Show({ course }) {
                                         <FileText size={64} />
                                     </div>
                                     <div className="space-y-4">
-                                        <p className="text-gray-500 max-w-sm mx-auto">Этот файл можно просмотреть, скачав его на устройство</p>
+                                        <p className="text-gray-700 max-w-sm mx-auto">Этот файл можно просмотреть, скачав его на устройство</p>
                                         <a 
                                             href={`/storage/${previewAsset.path}`} 
                                             download 

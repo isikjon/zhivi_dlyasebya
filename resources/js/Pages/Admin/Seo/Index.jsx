@@ -60,7 +60,7 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                             <button
                                 onClick={() => setActiveTab('pages')}
                                 className={`px-8 py-4 text-sm font-bold uppercase tracking-widest transition-colors flex items-center gap-2 ${
-                                    activeTab === 'pages' ? 'bg-gray-50 text-quantum-amber border-b-2 border-quantum-amber' : 'text-gray-400 hover:text-gray-600'
+                                    activeTab === 'pages' ? 'bg-gray-50 text-quantum-amber border-b-2 border-quantum-amber' : 'text-gray-700 hover:text-gray-800'
                                 }`}
                             >
                                 <Search size={18} /> Страницы
@@ -68,7 +68,7 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                             <button
                                 onClick={() => setActiveTab('global')}
                                 className={`px-8 py-4 text-sm font-bold uppercase tracking-widest transition-colors flex items-center gap-2 ${
-                                    activeTab === 'global' ? 'bg-gray-50 text-quantum-amber border-b-2 border-quantum-amber' : 'text-gray-400 hover:text-gray-600'
+                                    activeTab === 'global' ? 'bg-gray-50 text-quantum-amber border-b-2 border-quantum-amber' : 'text-gray-700 hover:text-gray-800'
                                 }`}
                             >
                                 <Globe size={18} /> Глобальные
@@ -76,7 +76,7 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                             <button
                                 onClick={() => setActiveTab('files')}
                                 className={`px-8 py-4 text-sm font-bold uppercase tracking-widest transition-colors flex items-center gap-2 ${
-                                    activeTab === 'files' ? 'bg-gray-50 text-quantum-amber border-b-2 border-quantum-amber' : 'text-gray-400 hover:text-gray-600'
+                                    activeTab === 'files' ? 'bg-gray-50 text-quantum-amber border-b-2 border-quantum-amber' : 'text-gray-700 hover:text-gray-800'
                                 }`}
                             >
                                 <FileText size={18} /> Robots & Sitemap
@@ -98,7 +98,7 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                                 <form onSubmit={submitGlobal} className="space-y-8 max-w-4xl">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                         <div className="space-y-4">
-                                            <label className="block text-xs font-bold uppercase tracking-widest text-gray-400">Мастер-фавикон (512x512px)</label>
+                                            <label className="block text-xs font-bold uppercase tracking-widest text-gray-600">Мастер-фавикон (512x512px)</label>
                                             <div className="flex items-center gap-4">
                                                 {favicon && (
                                                     <div className="w-12 h-12 bg-gray-50 rounded-lg border border-gray-200 flex items-center justify-center overflow-hidden">
@@ -108,10 +108,10 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                                                 <input 
                                                     type="file" 
                                                     onChange={e => globalForm.setData('favicon', e.target.files[0])}
-                                                    className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-600 hover:file:bg-gray-200"
+                                                    className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-600 hover:file:bg-gray-200"
                                                 />
                                             </div>
-                                            <p className="text-[10px] text-gray-400 mt-2 leading-relaxed">
+                                            <p className="text-[10px] text-gray-600 mt-2 leading-relaxed">
                                                 Загрузите квадратное изображение размером <span className="text-quantum-amber">512x512px</span>. 
                                                 Система автоматически сгенерирует все форматы: 
                                                 <span className="text-quantum-amber ml-1">favicon.ico, 16x16, 32x32, Apple Touch Icon (180x180) и Android Manifest</span>.
@@ -120,7 +120,7 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                                     </div>
 
                                     <div className="space-y-4">
-                                        <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                                        <label className="block text-xs font-bold uppercase tracking-widest text-gray-600 flex items-center gap-2">
                                             <Code size={14} className="text-quantum-amber" /> Скрипты в &lt;head&gt; (Метрика, Аналитика)
                                         </label>
                                         <textarea 
@@ -133,7 +133,7 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                                     </div>
 
                                     <div className="space-y-4">
-                                        <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                                        <label className="block text-xs font-bold uppercase tracking-widest text-gray-600 flex items-center gap-2">
                                             <Code size={14} className="text-quantum-amber" /> Скрипты в начале &lt;body&gt;
                                         </label>
                                         <textarea 
@@ -161,7 +161,7 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                             {activeTab === 'files' && (
                                 <div className="space-y-12 max-w-4xl">
                                     <form onSubmit={submitGlobal} className="space-y-4">
-                                        <label className="block text-xs font-bold uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                                        <label className="block text-xs font-bold uppercase tracking-widest text-gray-600 flex items-center gap-2">
                                             <Settings size={14} className="text-quantum-amber" /> Robots.txt
                                         </label>
                                         <textarea 
@@ -187,7 +187,7 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                                                 <h4 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                                                     <Share2 size={20} className="text-quantum-amber" /> Sitemap.xml
                                                 </h4>
-                                                <p className="text-sm text-gray-500 mt-1">Автоматическая генерация карты сайта для поисковиков</p>
+                                                <p className="text-sm text-gray-700 mt-1">Автоматическая генерация карты сайта для поисковиков</p>
                                             </div>
                                             <button 
                                                 onClick={generateSitemap}
@@ -198,7 +198,7 @@ export default function Index({ seoSettings, robots, favicon, scripts }) {
                                                 Сгенерировать сейчас
                                             </button>
                                         </div>
-                                        <div className="text-xs text-gray-500 bg-white p-4 rounded-xl border border-gray-100">
+                                        <div className="text-xs text-gray-700 bg-white p-4 rounded-xl border border-gray-100">
                                             Файл доступен по адресу: <a href="/sitemap.xml" target="_blank" className="text-quantum-amber hover:underline">/sitemap.xml</a>
                                         </div>
                                     </div>
@@ -256,7 +256,7 @@ function PageSeoForm({ page, initialData }) {
                     {/* Основные мета */}
                     <div className="space-y-4">
                         <div className="space-y-2">
-                            <label className="text-[10px] uppercase font-bold text-gray-400 ml-1">Meta Title</label>
+                            <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">Meta Title</label>
                             <input 
                                 type="text" 
                                 value={data.title}
@@ -264,10 +264,10 @@ function PageSeoForm({ page, initialData }) {
                                 className="w-full bg-white border-gray-200 rounded-xl text-sm text-gray-900 focus:ring-quantum-amber p-4"
                                 placeholder="Заголовок страницы в браузере"
                             />
-                            <p className="text-[10px] text-gray-400 mt-1 ml-1">Рекомендуется от 50 до 60 символов.</p>
+                            <p className="text-[10px] text-gray-600 mt-1 ml-1">Рекомендуется от 50 до 60 символов.</p>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] uppercase font-bold text-gray-400 ml-1">Meta Description</label>
+                            <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">Meta Description</label>
                             <textarea 
                                 value={data.description}
                                 onChange={e => setData('description', e.target.value)}
@@ -275,10 +275,10 @@ function PageSeoForm({ page, initialData }) {
                                 className="w-full bg-white border-gray-200 rounded-xl text-sm text-gray-900 focus:ring-quantum-amber p-4"
                                 placeholder="Краткое описание для поисковиков"
                             ></textarea>
-                            <p className="text-[10px] text-gray-400 mt-1 ml-1">Рекомендуется от 140 до 160 символов.</p>
+                            <p className="text-[10px] text-gray-600 mt-1 ml-1">Рекомендуется от 140 до 160 символов.</p>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] uppercase font-bold text-gray-400 ml-1">Keywords</label>
+                            <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">Keywords</label>
                             <input 
                                 type="text" 
                                 value={data.keywords}
@@ -293,10 +293,10 @@ function PageSeoForm({ page, initialData }) {
                     <div className="space-y-4 bg-gray-50 p-4 rounded-2xl border border-gray-100">
                         <div className="flex items-center gap-2 mb-2">
                             <Share2 size={14} className="text-quantum-amber" />
-                            <span className="text-[10px] uppercase font-bold text-gray-400">Социальные сети (Open Graph)</span>
+                            <span className="text-[10px] uppercase font-bold text-gray-600">Социальные сети (Open Graph)</span>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] uppercase font-bold text-gray-400 ml-1">OG Title</label>
+                            <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">OG Title</label>
                             <input 
                                 type="text" 
                                 value={data.og_title}
@@ -305,7 +305,7 @@ function PageSeoForm({ page, initialData }) {
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-[10px] uppercase font-bold text-gray-400 ml-1">OG Image</label>
+                            <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">OG Image</label>
                             <div className="flex items-center gap-4">
                                 {initialData?.og_image && (
                                     <div className="w-16 h-10 bg-white rounded border border-gray-200 overflow-hidden">
@@ -315,7 +315,7 @@ function PageSeoForm({ page, initialData }) {
                                 <input 
                                     type="file" 
                                     onChange={e => setData('og_image', e.target.files[0])}
-                                    className="block w-full text-[10px] text-gray-500 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-gray-100 file:text-gray-600 hover:file:bg-gray-200"
+                                    className="block w-full text-[10px] text-gray-700 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-gray-100 file:text-gray-600 hover:file:bg-gray-200"
                                 />
                             </div>
                         </div>
@@ -323,7 +323,7 @@ function PageSeoForm({ page, initialData }) {
                 </div>
 
                 <div className="space-y-2">
-                    <label className="text-[10px] uppercase font-bold text-gray-400 ml-1">Additional Meta Tags / Scripts</label>
+                    <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">Additional Meta Tags / Scripts</label>
                     <textarea 
                         value={data.additional_tags}
                         onChange={e => setData('additional_tags', e.target.value)}

@@ -61,35 +61,35 @@ export default function AdminLayout({ header, children }) {
                                 <NavLink
                                     href={route('admin.dashboard')}
                                     active={route().current('admin.dashboard')}
-                                    className="text-gray-600 hover:text-gray-900"
+                                    className="text-gray-800 hover:text-black font-semibold"
                                 >
                                     Дашборд
                                 </NavLink>
                                 <NavLink
                                     href={route('admin.courses.index')}
                                     active={route().current('admin.courses.*')}
-                                    className="text-gray-600 hover:text-gray-900"
+                                    className="text-gray-800 hover:text-black font-semibold"
                                 >
                                     Курсы
                                 </NavLink>
                                 <NavLink
                                     href={route('admin.users.index')}
                                     active={route().current('admin.users.*')}
-                                    className="text-gray-600 hover:text-gray-900"
+                                    className="text-gray-800 hover:text-black font-semibold"
                                 >
                                     Пользователи
                                 </NavLink>
                                 <NavLink
                                     href={route('admin.content.index')}
                                     active={route().current('admin.content.*')}
-                                    className="text-gray-600 hover:text-gray-900"
+                                    className="text-gray-800 hover:text-black font-semibold"
                                 >
                                     Контент
                                 </NavLink>
                                 <NavLink
                                     href={route('admin.seo.index')}
                                     active={route().current('admin.seo.*')}
-                                    className="text-gray-600 hover:text-gray-900"
+                                    className="text-gray-800 hover:text-black font-semibold"
                                 >
                                     SEO
                                 </NavLink>
@@ -103,7 +103,7 @@ export default function AdminLayout({ header, children }) {
                                         <span className="inline-flex rounded-md">
                                             <button
                                                 type="button"
-                                                className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
+                                                className="inline-flex items-center rounded-md border border-transparent bg-white px-3 py-2 text-sm font-medium leading-4 text-gray-700 transition duration-150 ease-in-out hover:text-gray-900 focus:outline-none"
                                             >
                                                 {user.name}
 
@@ -123,10 +123,10 @@ export default function AdminLayout({ header, children }) {
                                         </span>
                                     </Dropdown.Trigger>
 
-                                    <Dropdown.Content contentClasses="py-1 bg-white border border-gray-200">
+                                    <Dropdown.Content contentClasses="py-1 bg-white border border-gray-200 shadow-xl">
                                         <Dropdown.Link
                                             href={route('cabinet.profile.edit')}
-                                            className="text-gray-700 hover:bg-gray-100"
+                                            className="text-gray-800 hover:bg-gray-100"
                                         >
                                             Профиль
                                         </Dropdown.Link>
@@ -134,7 +134,7 @@ export default function AdminLayout({ header, children }) {
                                             href={route('logout')}
                                             method="post"
                                             as="button"
-                                            className="text-gray-700 hover:bg-gray-100"
+                                            className="text-gray-800 hover:bg-gray-100"
                                         >
                                             Выйти
                                         </Dropdown.Link>
@@ -150,7 +150,7 @@ export default function AdminLayout({ header, children }) {
                                         (previousState) => !previousState,
                                     )
                                 }
-                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-500 focus:bg-gray-100 focus:text-gray-500 focus:outline-none"
+                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-500 transition duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-700 focus:bg-gray-100 focus:text-gray-700 focus:outline-none"
                             >
                                 <svg
                                     className="h-6 w-6"
@@ -189,35 +189,35 @@ export default function AdminLayout({ header, children }) {
                 <div
                     className={
                         (showingNavigationDropdown ? 'block' : 'hidden') +
-                        ' sm:hidden bg-white border-t border-gray-200'
+                        ' sm:hidden bg-white border-t border-gray-200 shadow-lg'
                     }
                 >
                     <div className="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
                             href={route('admin.dashboard')}
                             active={route().current('admin.dashboard')}
-                            className="text-gray-600"
+                            className="text-gray-700"
                         >
                             Дашборд
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
                             href={route('admin.courses.index')}
                             active={route().current('admin.courses.*')}
-                            className="text-gray-600"
+                            className="text-gray-700"
                         >
                             Курсы
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
                             href={route('admin.users.index')}
                             active={route().current('admin.users.*')}
-                            className="text-gray-600"
+                            className="text-gray-700"
                         >
                             Пользователи
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
                             href={route('admin.content.index')}
                             active={route().current('admin.content.*')}
-                            className="text-gray-600"
+                            className="text-gray-700"
                         >
                             Контент
                         </ResponsiveNavLink>
@@ -225,23 +225,23 @@ export default function AdminLayout({ header, children }) {
 
                     <div className="border-t border-gray-200 pb-1 pt-4">
                         <div className="px-4">
-                            <div className="text-base font-medium text-gray-800">
+                            <div className="text-base font-medium text-gray-900">
                                 {user.name}
                             </div>
-                            <div className="text-sm font-medium text-gray-500">
+                            <div className="text-sm font-medium text-gray-600">
                                 {user.email}
                             </div>
                         </div>
 
                         <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('cabinet.profile.edit')} className="text-gray-600">
+                            <ResponsiveNavLink href={route('cabinet.profile.edit')} className="text-gray-700">
                                 Профиль
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 method="post"
                                 href={route('logout')}
                                 as="button"
-                                className="text-gray-600"
+                                className="text-gray-700"
                             >
                                 Выйти
                             </ResponsiveNavLink>

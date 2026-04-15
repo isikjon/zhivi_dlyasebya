@@ -119,7 +119,7 @@ export default function Index({ courses }) {
                                                     {course.image_path ? (
                                                         <img src={`/storage/${course.image_path}`} className="w-full h-full object-cover" />
                                                     ) : (
-                                                        <div className="w-full h-full flex items-center justify-center text-gray-400">
+                                                        <div className="w-full h-full flex items-center justify-center text-gray-600">
                                                             <ImageIcon size={20} />
                                                         </div>
                                                     )}
@@ -160,14 +160,14 @@ export default function Index({ courses }) {
                     <div className="bg-white border border-gray-200 rounded-[32px] w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl animate-in fade-in zoom-in duration-200">
                         <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                             <h3 className="text-lg font-bold text-gray-900 uppercase tracking-wider">Редактировать курс</h3>
-                            <button onClick={closeEditModal} className="p-2 text-gray-400 hover:text-gray-600 transition-colors">
+                            <button onClick={closeEditModal} className="p-2 text-gray-600 hover:text-gray-600 transition-colors">
                                 <X size={24} />
                             </button>
                         </div>
                         
                         <form onSubmit={submitEdit} className="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar">
                             <div className="space-y-2">
-                                <label className="text-[10px] uppercase font-bold text-gray-400 ml-1">Название курса</label>
+                                <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">Название курса</label>
                                 <input 
                                     type="text" 
                                     className="w-full bg-white border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 focus:ring-quantum-amber"
@@ -178,7 +178,7 @@ export default function Index({ courses }) {
                             </div>
 
                             <div className="space-y-2">
-                                <label className="text-[10px] uppercase font-bold text-gray-400 ml-1">Описание</label>
+                                <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">Описание</label>
                                 <textarea 
                                     className="w-full bg-white border-gray-300 rounded-xl px-4 py-3 text-sm text-gray-900 focus:ring-quantum-amber min-h-[100px]"
                                     value={editForm.data.description}
@@ -188,7 +188,7 @@ export default function Index({ courses }) {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <label className="text-[10px] uppercase font-bold text-gray-400 ml-1">Цена (руб.)</label>
+                                    <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">Цена (руб.)</label>
                                     <div className="flex gap-2">
                                         <input 
                                             type="number" 
@@ -203,7 +203,7 @@ export default function Index({ courses }) {
                                             className={`px-4 rounded-xl font-bold text-[10px] uppercase transition-all border ${
                                                 editForm.data.price == 0 
                                                 ? 'bg-green-100 border-green-500 text-green-700' 
-                                                : 'bg-white border-gray-300 text-gray-400 hover:border-green-500/50'
+                                                : 'bg-white border-gray-300 text-gray-600 hover:border-green-500/50'
                                             }`}
                                         >
                                             Бесплатно
@@ -212,14 +212,14 @@ export default function Index({ courses }) {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label className="text-[10px] uppercase font-bold text-gray-400 ml-1">Статус</label>
+                                    <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">Статус</label>
                                     <button 
                                         type="button"
                                         onClick={() => editForm.setData('is_active', !editForm.data.is_active)}
                                         className={`w-full py-3 rounded-xl font-bold text-[10px] uppercase transition-all border flex items-center justify-center gap-2 ${
                                             editForm.data.is_active 
                                             ? 'bg-blue-50 border-blue-500 text-blue-700' 
-                                            : 'bg-white border-gray-300 text-gray-400'
+                                            : 'bg-white border-gray-300 text-gray-600'
                                         }`}
                                     >
                                         {editForm.data.is_active ? <CheckCircle2 size={14} /> : null}
@@ -229,16 +229,16 @@ export default function Index({ courses }) {
                             </div>
 
                             <div className="space-y-4">
-                                <label className="text-[10px] uppercase font-bold text-gray-400 ml-1">Обложка курса</label>
+                                <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">Обложка курса</label>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div 
                                         onClick={() => fileInputRef.current.click()}
                                         className="border-2 border-dashed border-gray-200 rounded-2xl p-6 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-quantum-amber/50 hover:bg-quantum-amber/5 transition-all group"
                                     >
-                                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 group-hover:text-quantum-amber group-hover:bg-quantum-amber/10 transition-all">
+                                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 group-hover:text-quantum-amber group-hover:bg-quantum-amber/10 transition-all">
                                             <Upload size={20} />
                                         </div>
-                                        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover:text-quantum-amber transition-colors">Выбрать фото</span>
+                                        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-600 group-hover:text-quantum-amber transition-colors">Выбрать фото</span>
                                         <input 
                                             type="file" 
                                             ref={fileInputRef}
@@ -259,7 +259,7 @@ export default function Index({ courses }) {
                                         )}
                                     </div>
                                 </div>
-                                <p className="text-[10px] text-gray-400 italic px-1">
+                                <p className="text-[10px] text-gray-600 italic px-1">
                                     * Рекомендуемый размер обложки: 1280x720px (16:9) или 1080x1080px. Макс. вес: 2MB.
                                 </p>
                             </div>
@@ -268,7 +268,7 @@ export default function Index({ courses }) {
                                 <button 
                                     type="button"
                                     onClick={closeEditModal}
-                                    className="flex-1 py-4 rounded-xl font-bold uppercase text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                                    className="flex-1 py-4 rounded-xl font-bold uppercase text-xs text-gray-600 hover:text-gray-600 transition-colors"
                                 >
                                     Отмена
                                 </button>

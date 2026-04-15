@@ -43,7 +43,7 @@ export default function Index({ contents }) {
     const renderItem = (item) => (
         <div key={item.id} className="group relative border-b border-gray-200 pb-6 last:border-0 last:pb-0">
             <div className="flex justify-between items-start mb-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-tighter">
+                <label className="text-xs font-bold text-gray-600 uppercase tracking-tighter">
                     {item.key}
                 </label>
                 {editingId !== item.id ? (
@@ -93,8 +93,8 @@ export default function Index({ contents }) {
                     )}
                 </div>
             ) : (
-                <div className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
-                    {item.value || <span className="text-gray-400 italic">Пусто</span>}
+                <div className="text-gray-800 text-sm leading-relaxed whitespace-pre-wrap">
+                    {item.value || <span className="text-gray-600 italic">Пусто</span>}
                 </div>
             )}
         </div>
@@ -126,7 +126,7 @@ export default function Index({ contents }) {
                                 <div className="p-8 space-y-8">
                                     {groupedContents['SocialNetworks']?.map(item => renderItem(item))}
                                     {!groupedContents['SocialNetworks'] && (
-                                        <p className="text-gray-400 italic text-sm text-center py-4">Данные не найдены</p>
+                                        <p className="text-gray-600 italic text-sm text-center py-4">Данные не найдены</p>
                                     )}
                                 </div>
                             </div>

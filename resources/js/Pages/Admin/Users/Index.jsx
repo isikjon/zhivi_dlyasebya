@@ -32,7 +32,7 @@ export default function Index({ users }) {
                         <div className="p-6 text-gray-900">
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left text-sm">
-                                    <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-500">
+                                    <thead className="border-b border-gray-200 bg-gray-50 text-xs uppercase text-gray-700">
                                         <tr>
                                             <th className="px-6 py-4 font-medium">ФИО</th>
                                             <th className="px-6 py-4 font-medium">Почта</th>
@@ -43,7 +43,7 @@ export default function Index({ users }) {
                                     <tbody className="divide-y divide-gray-200">
                                         {users.length === 0 ? (
                                             <tr>
-                                                <td colSpan="4" className="px-6 py-8 text-center text-gray-400">
+                                                <td colSpan="4" className="px-6 py-8 text-center text-gray-600">
                                                     Пользователей пока нет
                                                 </td>
                                             </tr>
