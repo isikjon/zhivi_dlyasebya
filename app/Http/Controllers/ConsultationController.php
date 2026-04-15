@@ -20,7 +20,6 @@ class ConsultationController extends Controller
         ]);
 
         try {
-            // Save to database
             DB::table('consultations')->insert([
                 'name' => $validated['name'],
                 'contact' => $validated['contact'],
@@ -32,46 +31,85 @@ class ConsultationController extends Controller
                 'updated_at' => now(),
             ]);
 
-            // Send to Telegram
             $this->sendToTelegram($validated);
 
             return back()->with('message', 'Заявка успешно отправлена! Мы скоро свяжемся с вами.');
         } catch (\Exception $e) {
-            Log::error('Consultation error: ' . $e->getMessage());
+            Log::error('Consultation error: '.$e->getMessage());
+
             return response()->json(['message' => 'Произошла ошибка при отправке.'], 500);
         }
     }
 
-    private function sendToTelegram($data)
+    private function sendToTelegram(array $data): void
     {
-        $token = env('TELEGRAM_BOT_TOKEN');
-        $chatId = env('TELEGRAM_CHAT_ID');
+        $token = config('services.telegram.bot_token');
+        $chatId = config('services.telegram.chat_id');
+        $apiBase = config('services.telegram.api_base', 'https://api.telegram.org');
+        $proxy = config('services.telegram.http_proxy');
 
-        if (!$token || !$chatId) {
-            Log::warning('Telegram credentials not set');
+        if (! $token || ! $chatId) {
+            Log::warning('Telegram: задайте TELEGRAM_BOT_TOKEN и TELEGRAM_CHAT_ID в .env');
+
             return;
         }
 
+        $esc = static fn (string $s): string => htmlspecialchars($s, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
         $dateFormatted = date('d.m.Y', strtotime($data['date']));
-        
-        $message = "🔔 *Новая запись на консультацию*\n\n";
-        $message .= "👤 *Имя:* {$data['name']}\n";
-        $message .= "📞 *Контакт:* {$data['contact']}\n";
-        $message .= "📅 *Дата:* {$dateFormatted}\n";
-        $message .= "⏰ *Время:* {$data['time']}\n";
-        
-        if (!empty($data['request'])) {
-            $message .= "\n📝 *Запрос:* {$data['request']}";
+        $lines = [
+            '<b>Новая запись на консультацию</b>',
+            '',
+            '<b>Имя:</b> '.$esc($data['name']),
+            '<b>Контакт:</b> '.$esc($data['contact']),
+            '<b>Дата:</b> '.$esc($dateFormatted),
+            '<b>Время:</b> '.$esc((string) $data['time']),
+        ];
+        if (! empty($data['request'])) {
+            $lines[] = '';
+            $lines[] = '<b>Запрос:</b> '.$esc((string) $data['request']);
+        }
+        $message = implode("\n", $lines);
+
+        $url = "{$apiBase}/bot{$token}/sendMessage";
+
+        $options = [
+            'curl' => [
+                CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
+            ],
+        ];
+        if ($proxy) {
+            $options['proxy'] = $proxy;
         }
 
         try {
-            Http::post("https://api.telegram.org/bot{$token}/sendMessage", [
-                'chat_id' => $chatId,
-                'text' => $message,
-                'parse_mode' => 'Markdown',
+            $response = Http::timeout(25)
+                ->connectTimeout(12)
+                ->withOptions($options)
+                ->asForm()
+                ->post($url, [
+                    'chat_id' => $chatId,
+                    'text' => $message,
+                    'parse_mode' => 'HTML',
+                ]);
+
+            if (! $response->successful()) {
+                Log::error('Telegram sendMessage: HTTP ошибка', [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
+
+                return;
+            }
+
+            $payload = $response->json();
+            if (! ($payload['ok'] ?? false)) {
+                Log::error('Telegram sendMessage: ответ API', ['response' => $payload]);
+            }
+        } catch (\Throwable $e) {
+            Log::error('Telegram sendMessage: исключение', [
+                'message' => $e->getMessage(),
             ]);
-        } catch (\Exception $e) {
-            Log::error('Telegram send error: ' . $e->getMessage());
         }
     }
 }

@@ -40,4 +40,13 @@ return [
         'secret_key' => env('PRODAMUS_SECRET_KEY', ''),
     ],
 
+    'telegram' => [
+        'bot_token' => env('TELEGRAM_BOT_TOKEN'),
+        'chat_id' => env('TELEGRAM_CHAT_ID'),
+        /** Официальный API; при блокировке хостингом можно указать свой HTTPS-прокси (например Cloudflare Worker), без завершающего слэша */
+        'api_base' => rtrim((string) (env('TELEGRAM_API_BASE') ?: 'https://api.telegram.org'), '/'),
+        /** Опционально: http://user:pass@host:port или socks5://host:port для Guzzle */
+        'http_proxy' => env('TELEGRAM_HTTP_PROXY'),
+    ],
+
 ];
