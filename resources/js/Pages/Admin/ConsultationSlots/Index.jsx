@@ -24,12 +24,12 @@ export default function Index({ days = [], slots = {} }) {
         const time = (timeByDate[date] || '').trim();
         if (!time) return;
 
-        form
-            .transform(() => ({
-                slot_date: date,
-                slot_time: time,
-            }))
-            .post(route('admin.consultation-slots.store'), {
+        form.transform(() => ({
+            slot_date: date,
+            slot_time: time,
+        }));
+
+        form.post(route('admin.consultation-slots.store'), {
             preserveScroll: true,
             onSuccess: () => {
                 setTimeByDate((prev) => ({ ...prev, [date]: '' }));
