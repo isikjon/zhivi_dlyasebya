@@ -6,6 +6,15 @@ import { RichTextEditor } from '@/Components/RichTextEditor';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Show({ course }) {
+    const getEmptyLessonData = (title = '') => ({
+        title,
+        content: '',
+        video_url: '',
+        video: null,
+        audios: [],
+        files: [],
+    });
+
     const [activeModuleId, setActiveModuleId] = useState(null);
     const [expandedModules, setExpandedModules] = useState({});
 
@@ -26,19 +35,27 @@ export default function Show({ course }) {
 
     const moduleForm = useForm({ title: '' });
     const editModuleForm = useForm({ title: '' });
-    const lessonForm = useForm({
-        title: '',
-        content: '',
-        video_url: '',
-        video: null,
-        audios: [], 
-        files: [],  
-    });
+    const lessonForm = useForm(getEmptyLessonData());
+
+    const resetLessonEditorState = () => {
+        setEditingLesson(null);
+        setActiveModuleId(null);
+        lessonForm.setData(getEmptyLessonData());
+    };
+
+    const openNewLessonForm = (module) => {
+        setEditingLesson(null);
+        setActiveModuleId(module.id);
+        lessonForm.setData(getEmptyLessonData(module.title));
+    };
 
     const submitModule = (e) => {
         e.preventDefault();
         moduleForm.post(route('admin.modules.store', course.id), {
-            onSuccess: () => moduleForm.reset(),
+            onSuccess: () => {
+                moduleForm.reset();
+                resetLessonEditorState();
+            },
         });
     };
 
@@ -68,25 +85,28 @@ export default function Show({ course }) {
     };
 
     const cancelEditingLesson = () => {
-        setEditingLesson(null);
-        setActiveModuleId(null);
-        lessonForm.reset();
+        resetLessonEditorState();
     };
 
     const submitLesson = (e, moduleId) => {
         e.preventDefault();
-        const url = editingLesson 
-            ? route('admin.lessons.update', editingLesson.id) 
-            : route('admin.lessons.store', moduleId);
-        
         const module = course.modules.find(m => m.id === moduleId);
-        lessonForm.setData('title', module.title);
-        
-        lessonForm.post(url, {
+        const moduleLesson = module?.lessons?.[0] ?? null;
+        const lessonToUpdate = editingLesson ?? moduleLesson;
+        const fallbackTitle = module?.title ?? '';
+        const url = lessonToUpdate
+            ? route('admin.lessons.update', lessonToUpdate.id)
+            : route('admin.lessons.store', moduleId);
+
+        lessonForm.transform((data) => ({
+            ...data,
+            title: (data.title || lessonToUpdate?.title || fallbackTitle).trim(),
+            content: data.content || lessonToUpdate?.content || '',
+            video_url: data.video_url || lessonToUpdate?.video_url || '',
+        })).post(url, {
             onSuccess: () => {
-                lessonForm.reset();
-                setActiveModuleId(null);
-                setEditingLesson(null);
+                lessonForm.transform((data) => data);
+                resetLessonEditorState();
             },
             forceFormData: true,
         });
@@ -247,13 +267,7 @@ export default function Show({ course }) {
                                                             )}
                                                         </div>
                                                         <form 
-                                                            onSubmit={(e) => {
-                                                                const lesson = module.lessons[0];
-                                                                if (lesson && !editingLesson) {
-                                                                    setEditingLesson(lesson);
-                                                                }
-                                                                submitLesson(e, module.id);
-                                                            }} 
+                                                            onSubmit={(e) => submitLesson(e, module.id)} 
                                                             className="space-y-8"
                                                         >
                                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -361,7 +375,7 @@ export default function Show({ course }) {
                                                 {module.lessons.length === 0 && activeModuleId !== module.id && (
                                                     <div className="pt-4">
                                                         <button 
-                                                            onClick={() => { setEditingLesson(null); setActiveModuleId(module.id); }}
+                                                            onClick={() => openNewLessonForm(module)}
                                                             className="w-full py-4 border-2 border-dashed border-gray-200 rounded-2xl text-gray-600 hover:border-quantum-amber hover:text-quantum-amber transition-all flex items-center justify-center gap-2 font-bold uppercase text-xs tracking-widest"
                                                         >
                                                             <Plus size={18} />

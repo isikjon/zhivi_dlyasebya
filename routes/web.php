@@ -1,47 +1,73 @@
 <?php
 
 use App\Http\Controllers\Admin\CourseController as AdminCourseController;
+use App\Http\Controllers\Admin\ConsultationSlotController as AdminConsultationSlotController;
 use App\Http\Controllers\Admin\LessonController as AdminLessonController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 use Inertia\Inertia;
 
-Route::get('/', function () {
+$activeCourses = static function () {
+    try {
+        if (! Schema::hasTable('courses')) {
+            return collect();
+        }
+
+        return \App\Models\Course::where('is_active', true)->get();
+    } catch (\Throwable) {
+        return collect();
+    }
+};
+
+$homeContent = static function () {
+    try {
+        if (! Schema::hasTable('site_contents')) {
+            return [];
+        }
+
+        return \App\Http\Controllers\Admin\ContentController::getContent('home');
+    } catch (\Throwable) {
+        return [];
+    }
+};
+
+Route::get('/', function () use ($activeCourses, $homeContent) {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
-        'courses' => \App\Models\Course::where('is_active', true)->get(),
-        'siteContent' => \App\Http\Controllers\Admin\ContentController::getContent('home'),
+        'courses' => $activeCourses(),
+        'siteContent' => $homeContent(),
     ]);
 });
 
-Route::get('/catalog', function () {
+Route::get('/catalog', function () use ($activeCourses) {
     return Inertia::render('Catalog', [
-        'courses' => \App\Models\Course::where('is_active', true)->get(),
+        'courses' => $activeCourses(),
     ]);
 })->name('catalog');
 
-Route::get('/live-yourself', function () {
+Route::get('/live-yourself', function () use ($activeCourses) {
     return Inertia::render('LiveYourself', [
-        'courses' => \App\Models\Course::where('is_active', true)->get(),
+        'courses' => $activeCourses(),
     ]);
 })->name('live-yourself');
 
-Route::get('/archetypes', function () {
+Route::get('/archetypes', function () use ($activeCourses) {
     return Inertia::render('Archetypes', [
-        'courses' => \App\Models\Course::where('is_active', true)->get(),
+        'courses' => $activeCourses(),
     ]);
 })->name('archetypes');
 
-Route::get('/program/{id}', function ($id) {
+Route::get('/program/{id}', function ($id) use ($activeCourses) {
     return Inertia::render('Program', [
         'id' => $id,
-        'courses' => \App\Models\Course::where('is_active', true)->get(),
+        'courses' => $activeCourses(),
     ]);
 })->name('program.show');
 
@@ -49,38 +75,49 @@ Route::get('/thank-you', function () {
     return Inertia::render('ThankYou');
 })->name('thank-you');
 
-    // Личный кабинет ученика
-    Route::middleware(['auth', 'verified'])->prefix('cabinet')->name('cabinet.')->group(function () {
-        Route::get('/dashboard', [CourseController::class, 'index'])->name('index');
+// Личный кабинет ученика
+Route::middleware(['auth', 'verified'])->prefix('cabinet')->name('cabinet.')->group(function () {
+    Route::get('/dashboard', [CourseController::class, 'index'])->name('index');
     Route::get('/course/{course}', [CourseController::class, 'show'])->name('course.show');
     Route::post('/course/{course}/enroll', [CourseController::class, 'enroll'])->name('course.enroll');
     Route::get('/lesson/{lesson}', [CourseController::class, 'showLesson'])->name('lesson.show');
     Route::post('/lesson/{lesson}/complete', [CourseController::class, 'completeLesson'])->name('lesson.complete');
-        
-        // Профиль внутри кабинета
-        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    });
 
-    // Оплата через Prodamus
-    Route::middleware(['auth'])->group(function () {
-        Route::post('/payment/course/{course}', [\App\Http\Controllers\PaymentController::class, 'initiate'])->name('payment.initiate');
-        Route::get('/payment/success/{orderId}', [\App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
-        Route::get('/payment/return/{orderId}', [\App\Http\Controllers\PaymentController::class, 'returnPage'])->name('payment.return');
-        Route::get('/payment/history', [\App\Http\Controllers\PaymentController::class, 'history'])->name('payment.history');
-    });
+    // Профиль внутри кабинета (для текущего UI)
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-    // Webhook Prodamus (без CSRF, без auth)
-    Route::post('/webhook/prodamus', [\App\Http\Controllers\ProdamusWebhookController::class, 'handle'])->name('prodamus.webhook');
+// Совместимость со стандартными маршрутами Breeze и тестами
+Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-    // Новые пути для входа и регистрации в стиле фронта
-    Route::middleware('guest')->group(function () {
-        Route::get('login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'create'])->name('login');
-        Route::post('login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store']);
-        Route::get('register', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])->name('register');
-        Route::post('register', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'store']);
-    });
+Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
+    return redirect()->route('cabinet.index');
+})->name('dashboard');
+
+// Оплата через Prodamus
+Route::middleware(['auth'])->group(function () {
+    Route::post('/payment/course/{course}', [\App\Http\Controllers\PaymentController::class, 'initiate'])->name('payment.initiate');
+    Route::get('/payment/success/{orderId}', [\App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/payment/return/{orderId}', [\App\Http\Controllers\PaymentController::class, 'returnPage'])->name('payment.return');
+    Route::get('/payment/history', [\App\Http\Controllers\PaymentController::class, 'history'])->name('payment.history');
+});
+
+// Webhook Prodamus (без CSRF, без auth)
+Route::post('/webhook/prodamus', [\App\Http\Controllers\ProdamusWebhookController::class, 'handle'])->name('prodamus.webhook');
+
+// Новые пути для входа и регистрации в стиле фронта
+Route::middleware('guest')->group(function () {
+    Route::get('login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'create'])->name('login');
+    Route::post('login', [\App\Http\Controllers\Auth\AuthenticatedSessionController::class, 'store']);
+    Route::get('register', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'create'])->name('register');
+    Route::post('register', [\App\Http\Controllers\Auth\RegisteredUserController::class, 'store']);
+});
 
 // Админка
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -121,6 +158,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('/seo/page/{page}', [\App\Http\Controllers\Admin\SeoController::class, 'updatePage'])->name('seo.update_page');
     Route::post('/seo/global', [\App\Http\Controllers\Admin\SeoController::class, 'updateGlobal'])->name('seo.update_global');
     Route::post('/seo/sitemap', [\App\Http\Controllers\Admin\SeoController::class, 'generateSitemap'])->name('seo.generate_sitemap');
+
+    // Свободные слоты консультаций
+    Route::get('/consultation-slots', [AdminConsultationSlotController::class, 'index'])->name('consultation-slots.index');
+    Route::post('/consultation-slots', [AdminConsultationSlotController::class, 'store'])->name('consultation-slots.store');
+    Route::delete('/consultation-slots', [AdminConsultationSlotController::class, 'destroy'])->name('consultation-slots.destroy');
     
     // Уроки
     Route::post('/modules/{module}/lessons', [AdminLessonController::class, 'store'])->name('lessons.store');

@@ -1,52 +1,53 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { UserCheck, Calendar, MessageSquare, Send, CheckCircle2, Sparkles, Star, ArrowRight, Clock, ChevronRight, ChevronLeft, X } from 'lucide-react';
 import { Button } from './Button';
 import { EditableText } from './EditableText';
 import { EditableLink } from './EditableLink';
-import { useForm } from '@inertiajs/react';
-
-// Mock data for available slots
-const MOCK_AVAILABILITY: Record<string, string[]> = {
-  'Пн': ['10:00', '12:00', '15:00', '18:00'],
-  'Вт': ['11:00', '14:00', '16:00'],
-  'Ср': ['09:00', '13:00', '17:00', '19:00'],
-  'Чт': ['10:00', '12:00', '15:00'],
-  'Пт': ['11:00', '14:00', '16:00', '18:00'],
-  'Сб': ['12:00', '14:00'],
-  'Вс': ['15:00', '17:00']
-};
+import { useForm, usePage } from '@inertiajs/react';
 
 const DAY_NAMES = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
 const MONTH_NAMES = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
 
 export function ConsultationSection() {
+  const { consultationAvailability = [] } = usePage().props as {
+    consultationAvailability?: Array<{
+      isoDate: string;
+      dayName: string;
+      dayNum: number;
+      month: string;
+      times: string[];
+    }>;
+  };
+
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [selectedDateIdx, setSelectedDateIdx] = useState(0);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
-  // Generate next 7 days
   const nextSevenDays = useMemo(() => {
+    if (consultationAvailability.length > 0) {
+      return consultationAvailability;
+    }
+
     const days = [];
     const today = new Date();
     for (let i = 0; i < 7; i++) {
       const date = new Date(today);
       date.setDate(today.getDate() + i);
       days.push({
-        date,
         dayName: DAY_NAMES[date.getDay()],
         dayNum: date.getDate(),
         month: MONTH_NAMES[date.getMonth()],
-        fullDate: date.toLocaleDateString('ru-RU'),
-        isoDate: date.toISOString().split('T')[0]
+        isoDate: date.toISOString().split('T')[0],
+        times: [],
       });
     }
+
     return days;
-  }, []);
+  }, [consultationAvailability]);
 
   const currentDayAvailability = useMemo(() => {
-    const dayName = nextSevenDays[selectedDateIdx]?.dayName || 'Пн';
-    return MOCK_AVAILABILITY[dayName] || [];
+    return nextSevenDays[selectedDateIdx]?.times || [];
   }, [selectedDateIdx, nextSevenDays]);
 
   const { data, setData, post, processing, errors, reset } = useForm({
@@ -56,6 +57,16 @@ export function ConsultationSection() {
     time: '',
     request: ''
   });
+
+  useEffect(() => {
+    setSelectedDateIdx(0);
+    setSelectedTime(null);
+    setData((prev) => ({
+      ...prev,
+      date: nextSevenDays[0]?.isoDate || '',
+      time: '',
+    }));
+  }, [nextSevenDays, setData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -69,6 +80,9 @@ export function ConsultationSection() {
         setIsSubmitted(true);
         reset();
         setSelectedTime(null);
+        setSelectedDateIdx(0);
+        setData('date', nextSevenDays[0]?.isoDate || '');
+        setData('time', '');
       },
       preserveScroll: true
     });
@@ -301,6 +315,9 @@ export function ConsultationSection() {
                         </div>
                       )}
                     </div>
+                    {(errors.time || errors.date) && (
+                      <p className="text-[10px] text-red-500 ml-1">{errors.time || errors.date}</p>
+                    )}
                   </div>
 
                   {/* Contact Info */}
@@ -360,6 +377,12 @@ export function ConsultationSection() {
                   <p className="text-[10px] text-center text-quantum-ivory/30 uppercase tracking-widest">
                     Нажимая кнопку, ты соглашаешься с политикой конфиденциальности
                   </p>
+
+                  {errors.error && (
+                    <p className="text-[10px] text-center text-red-500 uppercase tracking-widest">
+                      {errors.error}
+                    </p>
+                  )}
                 </form>
               </div>
             </div>

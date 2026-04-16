@@ -94,6 +94,12 @@ export default function AdminLayout({ header, children }) {
                                 >
                                     SEO
                                 </NavLink>
+                                <NavLink
+                                    href={route('admin.consultation-slots.index')}
+                                    active={route().current('admin.consultation-slots.*')}
+                                >
+                                    Слоты
+                                </NavLink>
                             </div>
                         </div>
 
@@ -221,6 +227,13 @@ export default function AdminLayout({ header, children }) {
                             className="text-gray-700"
                         >
                             Контент
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('admin.consultation-slots.index')}
+                            active={route().current('admin.consultation-slots.*')}
+                            className="text-gray-700"
+                        >
+                            Слоты
                         </ResponsiveNavLink>
                     </div>
 

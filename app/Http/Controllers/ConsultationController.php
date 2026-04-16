@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ConsultationSlot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class ConsultationController extends Controller
 {
@@ -14,30 +16,53 @@ class ConsultationController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'contact' => 'required|string|max:255',
-            'date' => 'required|date',
-            'time' => 'required|string',
+            'date' => 'required|date_format:Y-m-d',
+            'time' => 'required|date_format:H:i',
             'request' => 'nullable|string',
         ]);
 
         try {
-            DB::table('consultations')->insert([
-                'name' => $validated['name'],
-                'contact' => $validated['contact'],
-                'date' => $validated['date'],
-                'time' => $validated['time'],
-                'request' => $validated['request'],
-                'status' => 'pending',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            DB::transaction(function () use ($validated) {
+                $slot = ConsultationSlot::query()
+                    ->whereDate('slot_date', $validated['date'])
+                    ->where('slot_time', $validated['time'].':00')
+                    ->where('is_active', true)
+                    ->lockForUpdate()
+                    ->first();
+
+                if (! $slot) {
+                    throw ValidationException::withMessages([
+                        'time' => 'Выбранный слот уже занят. Пожалуйста, выберите другое время.',
+                    ]);
+                }
+
+                DB::table('consultations')->insert([
+                    'consultation_slot_id' => $slot->id,
+                    'name' => $validated['name'],
+                    'contact' => $validated['contact'],
+                    'date' => $validated['date'],
+                    'time' => $validated['time'],
+                    'request' => $validated['request'],
+                    'status' => 'pending',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+
+                $slot->update([
+                    'is_active' => false,
+                    'booked_at' => now(),
+                ]);
+            });
 
             $this->sendToTelegram($validated);
 
             return back()->with('message', 'Заявка успешно отправлена! Мы скоро свяжемся с вами.');
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Exception $e) {
             Log::error('Consultation error: '.$e->getMessage());
 
-            return response()->json(['message' => 'Произошла ошибка при отправке.'], 500);
+            return back()->withErrors(['error' => 'Произошла ошибка при отправке. Попробуйте еще раз.']);
         }
     }
 
