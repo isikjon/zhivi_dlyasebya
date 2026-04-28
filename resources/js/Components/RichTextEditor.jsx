@@ -3,6 +3,7 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import Link from '@tiptap/extension-link';
 import { Bold, Italic, Underline as UnderlineIcon, List, ListOrdered, Link as LinkIcon, Undo, Redo } from 'lucide-react';
+import { useEffect } from 'react';
 
 const MenuBar = ({ editor }) => {
   if (!editor) {
@@ -113,6 +114,12 @@ export const RichTextEditor = ({ value, onChange, placeholder = "Введите 
       },
     },
   });
+
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value || '');
+    }
+  }, [value, editor]);
 
   return (
     <div className="w-full bg-gray-800 border border-gray-700 rounded-xl focus-within:ring-1 focus-within:ring-quantum-amber/50 transition-all overflow-hidden">

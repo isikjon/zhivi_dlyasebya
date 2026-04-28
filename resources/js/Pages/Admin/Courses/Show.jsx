@@ -1,6 +1,7 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Head, useForm, router } from '@inertiajs/react';
-import { Plus, Trash2, Video, Music, FileText, ChevronDown, ChevronUp, Loader2, Edit2, Check as CheckIcon, X, Upload, Film, AlertCircle } from 'lucide-react';
+import { Plus, Trash2, Video, Music, FileText, ChevronDown, ChevronUp, Loader2, Edit2, Check as CheckIcon, X, Upload, Film, AlertCircle, Save } from 'lucide-react';
+import InputError from '@/Components/InputError';
 import { useState, useRef } from 'react';
 import { RichTextEditor } from '@/Components/RichTextEditor';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -19,10 +20,29 @@ export default function Show({ course }) {
     const [expandedModules, setExpandedModules] = useState({});
 
     const toggleModule = (moduleId) => {
+        const isExpanding = !expandedModules[moduleId];
         setExpandedModules(prev => ({
             ...prev,
-            [moduleId]: !prev[moduleId]
+            [moduleId]: isExpanding
         }));
+
+        if (isExpanding) {
+            const module = course.modules.find(m => m.id === moduleId);
+            if (module && module.lessons.length > 0) {
+                // Initialize form with existing lesson data
+                const lesson = module.lessons[0];
+                setActiveModuleId(moduleId);
+                setEditingLesson(lesson);
+                lessonForm.setData({
+                    title: lesson.title,
+                    content: lesson.content || '',
+                    video_url: lesson.video_url || '',
+                    video: null,
+                    audios: [],
+                    files: [],
+                });
+            }
+        }
     };
     
     const [editingModuleId, setEditingModuleId] = useState(null);
@@ -100,13 +120,15 @@ export default function Show({ course }) {
 
         lessonForm.transform((data) => ({
             ...data,
-            title: (data.title || lessonToUpdate?.title || fallbackTitle).trim(),
+            title: (data.title || lessonToUpdate?.title || fallbackTitle || '').trim(),
             content: data.content || lessonToUpdate?.content || '',
             video_url: data.video_url || lessonToUpdate?.video_url || '',
         })).post(url, {
             onSuccess: () => {
-                lessonForm.transform((data) => data);
                 resetLessonEditorState();
+            },
+            onError: (err) => {
+                console.error('Lesson submission error:', err);
             },
             forceFormData: true,
         });
@@ -270,6 +292,25 @@ export default function Show({ course }) {
                                                             onSubmit={(e) => submitLesson(e, module.id)} 
                                                             className="space-y-8"
                                                         >
+                                                            {lessonForm.errors.error && (
+                                                                <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 text-red-700 text-sm">
+                                                                    <AlertCircle size={18} />
+                                                                    {lessonForm.errors.error}
+                                                                </div>
+                                                            )}
+
+                                                            <div className="space-y-2">
+                                                                <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">Название урока</label>
+                                                                <input
+                                                                    type="text"
+                                                                    value={lessonForm.data.title}
+                                                                    onChange={e => lessonForm.setData('title', e.target.value)}
+                                                                    className="w-full bg-white border border-black rounded-xl px-5 py-3 text-gray-900 focus:ring-quantum-amber placeholder:text-gray-400"
+                                                                    placeholder="Введите название урока"
+                                                                />
+                                                                <InputError message={lessonForm.errors.title} />
+                                                            </div>
+
                                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                                                 <div className="space-y-4">
                                                                     <FileUploadButton 
@@ -348,9 +389,10 @@ export default function Show({ course }) {
                                                             <div className="md:col-span-2 space-y-2">
                                                                 <label className="text-[10px] uppercase font-bold text-gray-600 ml-1">Текстовое описание</label>
                                                                 <RichTextEditor 
-                                                                    value={lessonForm.data.content || module.lessons[0]?.content || ''} 
+                                                                    value={lessonForm.data.content} 
                                                                     onChange={(html) => lessonForm.setData('content', html)} 
                                                                 />
+                                                                <InputError message={lessonForm.errors.content} />
                                                             </div>
                                                             <div className="flex gap-4 justify-end pt-4 border-t border-gray-200">
                                                                 {module.lessons.length > 0 && (
