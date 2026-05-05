@@ -7,8 +7,10 @@ use App\Models\Enrollment;
 use App\Models\Payment;
 use App\Services\ProdamusService;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\Response;
 
 class PaymentController extends Controller
 {
@@ -16,7 +18,17 @@ class PaymentController extends Controller
         private ProdamusService $prodamus
     ) {}
 
-    public function initiate(Course $course)
+    public function initiate(Request $request, Course $course)
+    {
+        return $this->startCheckout($request, $course);
+    }
+
+    public function checkout(Request $request, Course $course)
+    {
+        return $this->startCheckout($request, $course);
+    }
+
+    private function startCheckout(Request $request, Course $course): Response|RedirectResponse
     {
         $user = Auth::user();
 
@@ -52,15 +64,24 @@ class PaymentController extends Controller
             ->first();
 
         if ($pendingPayment) {
-            $paymentUrl = $this->prodamus->createPaymentLink($user, $course, $pendingPayment);
+            $paymentUrl = $this->prodamus->resolveCheckoutUrl($user, $course, $pendingPayment);
 
-            return Inertia::location($paymentUrl);
+            return $this->redirectToCheckout($request, $paymentUrl);
         }
 
         $payment = $this->prodamus->createOrder($user, $course);
-        $paymentUrl = $this->prodamus->createPaymentLink($user, $course, $payment);
+        $paymentUrl = $this->prodamus->resolveCheckoutUrl($user, $course, $payment);
 
-        return Inertia::location($paymentUrl);
+        return $this->redirectToCheckout($request, $paymentUrl);
+    }
+
+    private function redirectToCheckout(Request $request, string $paymentUrl): Response|RedirectResponse
+    {
+        if ($request->header('X-Inertia')) {
+            return Inertia::location($paymentUrl);
+        }
+
+        return redirect()->away($paymentUrl);
     }
 
     public function success(string $orderId)

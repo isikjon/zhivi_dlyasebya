@@ -31,8 +31,8 @@ class LessonController extends Controller
             $lessonData = [
                 'module_id' => $module->id,
                 'title' => $validated['title'],
-                'content' => $validated['content'],
-                'video_url' => $validated['video_url'],
+                'content' => $validated['content'] ?? null,
+                'video_url' => $validated['video_url'] ?? null,
                 'order' => $module->lessons()->count() + 1,
             ];
 
@@ -91,8 +91,8 @@ class LessonController extends Controller
 
             $lessonData = [
                 'title' => $validated['title'],
-                'content' => $validated['content'],
-                'video_url' => $validated['video_url'],
+                'content' => $validated['content'] ?? null,
+                'video_url' => $validated['video_url'] ?? null,
             ];
 
             if ($request->hasFile('video')) {

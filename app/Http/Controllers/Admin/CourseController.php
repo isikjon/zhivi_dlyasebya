@@ -41,9 +41,11 @@ class CourseController extends Controller
             $validated['image_path'] = $request->file('image')->store('courses', 'public');
         }
 
-        Course::create($validated);
+        $course = Course::create($validated);
 
-        return redirect()->route('admin.courses.index')->with('message', 'Курс успешно создан');
+        return redirect()
+            ->route('admin.courses.show', $course)
+            ->with('message', 'Курс успешно создан. Теперь можно добавить модули и уроки.');
     }
 
     public function edit(Course $course)

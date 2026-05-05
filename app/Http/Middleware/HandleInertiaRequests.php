@@ -119,6 +119,7 @@ class HandleInertiaRequests extends Middleware
             'consultationAvailability' => $consultationAvailability,
             'flash' => [
                 'message' => $request->session()->get('message'),
+                'error' => $request->session()->get('error'),
             ],
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),

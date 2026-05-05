@@ -133,7 +133,7 @@ class CourseController extends Controller
             return redirect()->route('cabinet.course.show', $course->id)->with('message', 'Курс успешно добавлен в ваш кабинет');
         }
 
-        return redirect()->route('payment.initiate', $course->id);
+        return redirect()->route('payment.checkout', $course->id);
     }
 
     public function completeLesson(\App\Models\Lesson $lesson)

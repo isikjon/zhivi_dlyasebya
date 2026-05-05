@@ -16,8 +16,9 @@ class CustomValidatePostSize
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Исключаем маршрут загрузки уроков из проверки размера POST на уровне Laravel
-        if ($request->is('admin/modules/*/lessons')) {
+        // Для загрузок уроков проверка Laravel может срабатывать раньше полезной
+        // обработки запроса, поэтому пропускаем create/update маршруты уроков.
+        if ($request->is('admin/modules/*/lessons') || $request->is('admin/lessons/*')) {
             return $next($request);
         }
 

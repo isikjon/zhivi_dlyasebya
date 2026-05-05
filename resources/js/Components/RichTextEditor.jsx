@@ -1,7 +1,5 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
-import Link from '@tiptap/extension-link';
 import { Bold, Italic, Underline as UnderlineIcon, List, ListOrdered, Link as LinkIcon, Undo, Redo } from 'lucide-react';
 import { useEffect } from 'react';
 
@@ -91,13 +89,13 @@ const MenuBar = ({ editor }) => {
 const extensions = [
   StarterKit.configure({
     history: true,
-  }),
-  Underline,
-  Link.configure({
-    openOnClick: false,
-    HTMLAttributes: {
-      class: 'rich-text-link',
+    link: {
+      openOnClick: false,
+      HTMLAttributes: {
+        class: 'rich-text-link',
+      },
     },
+    underline: {},
   }),
 ];
 

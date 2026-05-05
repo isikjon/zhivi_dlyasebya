@@ -3,7 +3,6 @@ import { motion } from 'motion/react';
 import { Circle, Waves, Infinity, Star, Check, Sparkles } from 'lucide-react';
 import { Button } from './Button';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import { EditableText } from './EditableText';
 import { EditableLink } from './EditableLink';
 import { usePage } from '@inertiajs/react';
@@ -65,20 +64,16 @@ const forWhom = [
 ];
 
 export function MainProgramSection() {
-  const { isAuthenticated } = useAuth();
   const { mainCourse } = usePage().props as any;
   const navigate = useNavigate();
 
   const handleJoin = () => {
-    if (isAuthenticated) {
-      if (mainCourse) {
-        navigate(`/cabinet/course/${mainCourse.id}`);
-      } else {
-        navigate('/cabinet/dashboard');
-      }
-    } else {
-      window.location.href = '/login';
+    if (mainCourse) {
+      window.location.href = `/checkout/course/${mainCourse.id}`;
+      return;
     }
+
+    navigate('/catalog');
   };
 
   return (

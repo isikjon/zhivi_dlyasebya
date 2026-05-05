@@ -123,12 +123,17 @@ export default function Show({ course }) {
             title: (data.title || lessonToUpdate?.title || fallbackTitle || '').trim(),
             content: data.content || lessonToUpdate?.content || '',
             video_url: data.video_url || lessonToUpdate?.video_url || '',
-        })).post(url, {
+        }));
+
+        lessonForm.post(url, {
             onSuccess: () => {
                 resetLessonEditorState();
             },
             onError: (err) => {
                 console.error('Lesson submission error:', err);
+            },
+            onFinish: () => {
+                lessonForm.transform((data) => data);
             },
             forceFormData: true,
         });

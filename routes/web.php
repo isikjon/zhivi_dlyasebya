@@ -102,6 +102,7 @@ Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
 
 // Оплата через Prodamus
 Route::middleware(['auth'])->group(function () {
+    Route::get('/checkout/course/{course}', [\App\Http\Controllers\PaymentController::class, 'checkout'])->name('payment.checkout');
     Route::post('/payment/course/{course}', [\App\Http\Controllers\PaymentController::class, 'initiate'])->name('payment.initiate');
     Route::get('/payment/success/{orderId}', [\App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
     Route::get('/payment/return/{orderId}', [\App\Http\Controllers\PaymentController::class, 'returnPage'])->name('payment.return');

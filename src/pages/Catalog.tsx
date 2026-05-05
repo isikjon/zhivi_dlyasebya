@@ -91,7 +91,11 @@ export default function Catalog() {
         <main className="flex-1">
           <div className="grid md:grid-cols-2 gap-8">
             <AnimatePresence mode="popLayout">
-              {filteredCourses.map((prog, i) => (
+              {filteredCourses.map((prog, i) => {
+                const programUrl = `/program/${prog.id}`;
+                const checkoutUrl = `/checkout/course/${prog.id}`;
+
+                return (
                 <motion.div 
                   key={prog.id}
                   layout
@@ -127,13 +131,13 @@ export default function Catalog() {
                         <div className="font-display text-3xl font-bold text-quantum-ivory">
                           {prog.price}
                         </div>
-                        <a href={`/cabinet/course/${prog.id}`} className="text-quantum-rose hover:translate-x-1 transition-transform">
+                        <a href={programUrl} className="text-quantum-rose hover:translate-x-1 transition-transform">
                           <ChevronRight size={24} />
                         </a>
                       </div>
                       
                       <div className="flex items-center gap-3">
-                        <a href={`/cabinet/course/${prog.id}`} className="flex-1">
+                        <a href={programUrl} className="flex-1">
                           <Button 
                             variant="outline" 
                             className="w-full py-4 text-xs font-bold uppercase tracking-widest"
@@ -145,11 +149,7 @@ export default function Catalog() {
                           variant={prog.category === 'free' ? 'secondary' : 'primary'}
                           className="flex-1 py-4 text-xs font-bold uppercase tracking-widest"
                           onClick={() => {
-                            if (prog.category === 'free') {
-                              window.location.href = `/cabinet/course/${prog.id}`;
-                            } else {
-                              window.open(siteContent?.SocialNetworks?.telegram_link || 'https://t.me/victoria_neustroeva', '_blank');
-                            }
+                            window.location.href = checkoutUrl;
                           }}
                         >
                           {prog.category === 'free' ? 'Начать' : 'Купить'}
@@ -158,7 +158,8 @@ export default function Catalog() {
                     </div>
                   </div>
                 </motion.div>
-              ))}
+                );
+              })}
             </AnimatePresence>
           </div>
 

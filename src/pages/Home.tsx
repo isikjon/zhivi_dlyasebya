@@ -141,7 +141,11 @@ export default function Home({ courses = [], siteContent: localSiteContent = {} 
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {courses.slice(0, 3).map((prog, i) => (
+            {courses.slice(0, 3).map((prog, i) => {
+              const programUrl = `/program/${prog.id}`;
+              const checkoutUrl = `/checkout/course/${prog.id}`;
+
+              return (
               <motion.div 
                 key={prog.id}
                 initial={{ opacity: 0, y: 30 }}
@@ -172,13 +176,13 @@ export default function Home({ courses = [], siteContent: localSiteContent = {} 
                       <div className="font-display text-3xl font-bold text-quantum-ivory">
                         {prog.price == 0 ? 'Бесплатно' : `${prog.price} ₽`}
                       </div>
-                      <a href={`/catalog`} className="text-quantum-amber hover:translate-x-1 transition-transform">
+                      <a href={programUrl} className="text-quantum-amber hover:translate-x-1 transition-transform">
                         <ChevronRight size={24} />
                       </a>
                     </div>
                     
                     <div className="flex items-center gap-3">
-                      <a href={`/catalog`} className="flex-1">
+                      <a href={programUrl} className="flex-1">
                         <Button 
                           variant="outline" 
                           className="w-full py-4 text-xs font-bold uppercase tracking-widest border-white/10 text-quantum-ivory hover:bg-white/5"
@@ -189,12 +193,8 @@ export default function Home({ courses = [], siteContent: localSiteContent = {} 
                       <Button 
                         className="flex-1 py-4 text-xs font-bold uppercase tracking-widest bg-quantum-amber text-quantum-emerald hover:bg-quantum-amber/90"
                         onClick={() => {
-                                  if (prog.price == 0) {
-                                    window.location.href = `/cabinet/course/${prog.id}`;
-                                  } else {
-                                    window.open(siteContent?.SocialNetworks?.telegram_link || 'https://t.me/victoria_neustroeva', '_blank');
-                                  }
-                                }}
+                          window.location.href = checkoutUrl;
+                        }}
                       >
                         {prog.price == 0 ? 'Начать' : 'Купить'}
                       </Button>
@@ -202,7 +202,8 @@ export default function Home({ courses = [], siteContent: localSiteContent = {} 
                   </div>
                 </div>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="mt-16 text-center">

@@ -24,7 +24,7 @@ export default function Program() {
   }
 
   const handleBuy = () => {
-    navigate('/thank-you');
+    window.location.href = `/checkout/course/${id}`;
   };
 
   return (
